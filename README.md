@@ -13,3 +13,4 @@ This Step depends on steps-xcode-builder's Archive step
 - S3_DEPLOY_AWS_ACCESS_KEY
 - S3_DEPLOY_AWS_SECRET_KEY
 - S3_BUCKET_NAME
+- S3_REGION					(optional)

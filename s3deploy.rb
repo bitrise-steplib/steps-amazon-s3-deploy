@@ -7,7 +7,8 @@ options = {
 	dsym: ENV['CONCRETE_DSYM_PATH'],
 	access_key: ENV['S3_DEPLOY_AWS_ACCESS_KEY'],
 	secret_key: ENV['S3_DEPLOY_AWS_SECRET_KEY'],
-	bucket_name: ENV['S3_BUCKET_NAME']
+	bucket_name: ENV['S3_BUCKET_NAME'],
+	region: ENV['S3_REGION']
 }
 
 p "Options: #{options}"
@@ -33,7 +34,8 @@ begin
 
 	AWS.config(
   	:access_key_id => options[:access_key], 
-  	:secret_access_key => options[:secret_key]
+  	:secret_access_key => options[:secret_key],
+  	:region => options[:region]
 	)
 
 	s3 = AWS::S3.new
