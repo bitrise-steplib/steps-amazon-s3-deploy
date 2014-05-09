@@ -2,13 +2,17 @@ require 'rubygems'
 require 'aws-sdk'
 
 options = {
-  status: ENV['CONCRETE_ARCHIVE_STATUS'],
-  ipa: ENV['CONCRETE_IPA_PATH'],
+	status: ENV['CONCRETE_ARCHIVE_STATUS'],
+	ipa: ENV['CONCRETE_IPA_PATH'],
 	dsym: ENV['CONCRETE_DSYM_PATH'],
+	app_slug: ENV['CONCRETE_APP_SLUG'],
+	app_title: ENV['CONCRETE_APP_TITLE'],
+	build_slug: ENV['CONCRETE_BUILD_SLUG'],
 	access_key: ENV['S3_DEPLOY_AWS_ACCESS_KEY'],
 	secret_key: ENV['S3_DEPLOY_AWS_SECRET_KEY'],
 	bucket_name: ENV['S3_BUCKET_NAME'],
-	region: ENV['S3_REGION']
+	region_name: ENV['S3_REGION_NAME'],
+	path_in_bucket: ENV['S3_PATH_IN_BUCKET']
 }
 
 p "Options: #{options}"
@@ -35,19 +39,26 @@ begin
 	AWS.config(
   	:access_key_id => options[:access_key], 
   	:secret_access_key => options[:secret_key],
-  	:region => options[:region]
+  	:region => options[:region_name]
 	)
 
 	s3 = AWS::S3.new
 
+	# define path
+	path = ""
+	if (options[:path_in_bucket])
+		path = options[:path_in_bucket]
+	else
+		path = "concrete_#{app_title}_#{app_slug}/build_#{build_slug}/"
+
 	# ipa upload
-	s3.buckets[options[:bucket_name]].objects[File.basename(options[:ipa])].write(:file => options[:ipa])
-	puts "Uploading ipa #{options[:ipa]} to bucket #{options[:bucket_name]}."
+	s3.buckets[options[:bucket_name]].objects[path].write(:file => options[:ipa])
+	puts "Uploading ipa #{options[:ipa]} to bucket #{options[:bucket_name]}. Path= #{path}"
 
 	# dsym upload
 	if File.exists?(options[:dsym])
-		s3.buckets[options[:bucket_name]].objects[File.basename(options[:dsym])].write(:file => options[:dsym])
-		puts "Uploading dsym #{options[:dsym]} to bucket #{options[:bucket_name]}."
+		s3.buckets[options[:bucket_name]].objects[path].write(:file => options[:dsym])
+		puts "Uploading dsym #{options[:dsym]} to bucket #{options[:bucket_name]}. Path= #{path}"
 	end
 
 rescue => ex

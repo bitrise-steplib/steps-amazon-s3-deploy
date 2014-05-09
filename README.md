@@ -9,8 +9,12 @@ This Step depends on steps-xcode-builder's Archive step
 - CONCRETE_ARCHIVE_STATUS 	(passed automatically)
 - CONCRETE_IPA_PATH			(passed automatically)
 - CONCRETE_DSYM_PATH		(passed automatically)
+- CONCRETE_APP_SLUG			(passed automatically)
+- CONCRETE_APP_TITLE		(passed automatically)
+- CONCRETE_BUILD_SLUG		(passed automatically)
 
 - S3_DEPLOY_AWS_ACCESS_KEY
 - S3_DEPLOY_AWS_SECRET_KEY
 - S3_BUCKET_NAME
-- S3_REGION					(optional)
+- S3_REGION_NAME			(optional)
+- S3_PATH_IN_BUCKET			(optional, default = concrete_{app_title}_{app_slug}/build_{build_slug})
