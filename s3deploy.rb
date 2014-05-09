@@ -99,7 +99,7 @@ begin
 		puts "NO PLIST :<"
 	end
 
-	public_url_plist = s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:dsym])].public_url
+	public_url_plist = s3.buckets[options[:bucket_name]].objects[path + plist_path].public_url
 
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_PLIST=\"#{public_url_plist}\"\n") }
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_URL_PLIST=\"#{public_url_plist}\"\n") }
