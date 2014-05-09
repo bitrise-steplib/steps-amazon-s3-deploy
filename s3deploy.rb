@@ -76,9 +76,6 @@ begin
 	public_url = s3.buckets[options[:bucket_name]].objects[path].public_url
 	public_url_ipa = s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:ipa])].public_url
 	public_url_dsym = s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:dsym])].public_url
-
-	puts public_url_ipa
-	puts public_url_dsym
 	
 	# output variables
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_IPA=\"#{public_url_ipa}\"\n") }
@@ -86,7 +83,7 @@ begin
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_URL_IPA=\"#{public_url_ipa}\"\n") }
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_URL_DSYM=\"#{public_url_dsym}\"\n") }
 
-	ENV['HOME'] = public_url_ipa
+	ENV['HOME'] = "#{public_url_ipa}"
 
 	# plist generation - we have to run it after we have the public url to ipa
 	system("sh ./gen_plist.sh")
@@ -94,7 +91,7 @@ begin
 	# plist upload
 
 	plist_path = options[:app_title] + ".plist"
-	
+
 	if File.exists?(plist_path)
 		s3.buckets[options[:bucket_name]].objects[path + plist_path].write(:file => plist_path, :acl => access_level)
 		puts "Uploading plist #{options[:plist]} to bucket #{options[:bucket_name]}."
