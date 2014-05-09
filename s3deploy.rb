@@ -83,7 +83,7 @@ begin
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_URL_IPA=\"#{public_url_ipa}\"\n") }
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_URL_DSYM=\"#{public_url_dsym}\"\n") }
 
-	ENV['HOME'] = ENV['HOME'] + " S3_DEPLOY_STEP_URL_IPA=#{public_url_ipa}"
+	ENV['S3_DEPLOY_STEP_URL_IPA'] = "#{public_url_ipa}"
 
 	# plist generation - we have to run it after we have the public url to ipa
 	system("sh ./gen_plist.sh")
