@@ -50,7 +50,8 @@ begin
 		path = options[:path_in_bucket]
 	else
 		path = "concrete_#{app_title}_#{app_slug}/build_#{build_slug}/"
-
+	end
+	
 	# ipa upload
 	s3.buckets[options[:bucket_name]].objects[path].write(:file => options[:ipa])
 	puts "Uploading ipa #{options[:ipa]} to bucket #{options[:bucket_name]}. Path= #{path}"
