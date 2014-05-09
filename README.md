@@ -18,3 +18,10 @@ This Step depends on steps-xcode-builder's Archive step
 - S3_BUCKET_NAME
 - S3_REGION_NAME			(optional)
 - S3_PATH_IN_BUCKET			(optional, default = concrete_{app_title}_{app_slug}/build_{build_slug})
+
+# Output Environment Variables
+- CONCRETE_DEPLOY_URL
+- CONCRETE_DEPLOY_STATUS=[success/failed]
+
+- S3_DEPLOY_STEP_URL
+- S3_DEPLOY_STEP_STATUS=[success/failed]

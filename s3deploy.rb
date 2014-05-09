@@ -17,6 +17,7 @@ options = {
 
 p "Options: #{options}"
 
+status = "success"
 begin
 	# checks
 	#
@@ -44,10 +45,10 @@ begin
 
 	s3 = AWS::S3.new
 
-	# define path
+	# define object path
 	path = ""
 	if (options[:path_in_bucket])
-		path = "#{options[:path_in_bucket]}/"
+		path = options[:path_in_bucket] + "/"
 	else
 		path = "concrete_#{options[:app_title]}_#{options[:app_slug]}/build_#{options[:build_slug]}/"
 	end
@@ -62,7 +63,19 @@ begin
 		puts "Uploading dsym #{options[:dsym]} to bucket #{options[:bucket_name]}. Path= #{path}"
 	end
 
+	# public url
+	public_url = s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:ipa])].public_url
+
+	puts public_url
+	# output variables
+	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL=\"#{public_url}\"\n") }
+	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_URL=\"#{public_url}\"\n") }
+
 rescue => ex
 	puts "Exception happened: #{ex}"
+	status = "failed"
 	exit 1
+ensure
+	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_STATUS=\"#{status}\"\n") }
+	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_STATUS=\"#{status}\"\n") }
 end
