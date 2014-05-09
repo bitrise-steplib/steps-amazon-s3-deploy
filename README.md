@@ -27,8 +27,10 @@ This Step depends on steps-xcode-builder's Archive step
   * bucket_owner_full_control
 
 # Output Environment Variables
-- CONCRETE_DEPLOY_URL
+- CONCRETE_DEPLOY_URL_IPA
+- CONCRETE_DEPLOY_URL_DSYM
 - CONCRETE_DEPLOY_STATUS=[success/failed]
 
-- S3_DEPLOY_STEP_URL
+- S3_DEPLOY_STEP_URL_IPA
+- S3_DEPLOY_STEP_URL_DSYM
 - S3_DEPLOY_STEP_STATUS=[success/failed]
