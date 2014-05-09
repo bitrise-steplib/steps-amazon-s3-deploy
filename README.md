@@ -12,7 +12,7 @@ This Step depends on steps-xcode-builder's Archive step
 - CONCRETE_APP_SLUG			(passed automatically)
 - CONCRETE_APP_TITLE		(passed automatically)
 - CONCRETE_BUILD_SLUG		(passed automatically)
--
+- 
 - S3_DEPLOY_AWS_ACCESS_KEY
 - S3_DEPLOY_AWS_SECRET_KEY
 - S3_BUCKET_NAME
@@ -32,7 +32,7 @@ This Step depends on steps-xcode-builder's Archive step
 - CONCRETE_DEPLOY_URL_PLIST
 - CONCRETE_DEPLOY_STATUS=[success/failed]
 - CONCRETE_DEPLOY_EMAIL_READY_URL
--
+- .
 - S3_DEPLOY_STEP_URL_IPA
 - S3_DEPLOY_STEP_URL_DSYM
 - S3_DEPLOY_STEP_URL_PLIST
