@@ -54,7 +54,7 @@ begin
 	end
 
 	# ipa upload
-	s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:ipa])].write(:file => options[:ipa])
+	s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:ipa])].write(:file => options[:ipa], :acl => ':public_read')
 	puts "Uploading ipa #{options[:ipa]} to bucket #{options[:bucket_name]}. Path= #{path}"
 
 	# dsym upload
@@ -64,11 +64,11 @@ begin
 	end
 
 	# public url
-	public_url = s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:ipa])].public_url
-	public_url2 = s3.buckets[options[:bucket_name]].objects[path].public_url
+	public_url = s3.buckets[options[:bucket_name]].objects[path].public_url
+	public_url2 = s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:ipa])].public_url
 
-	puts public_url
-	puts public_url2
+	puts "public url" + public_url
+	puts "public url2" + public_url2
 	# output variables
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL=\"#{public_url}\"\n") }
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_URL=\"#{public_url}\"\n") }
@@ -80,4 +80,5 @@ rescue => ex
 ensure
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_STATUS=\"#{status}\"\n") }
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_STATUS=\"#{status}\"\n") }
+	puts "status=" + status
 end
