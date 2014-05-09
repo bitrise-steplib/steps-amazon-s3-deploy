@@ -85,11 +85,10 @@ begin
 
 	ENV['S3_DEPLOY_STEP_URL_IPA'] = "#{public_url_ipa}"
 
-	# plist generation - we have to run it after we have the public url to ipa
+	# plist generation - we have to run it after we have obtained the public url to the ipa
 	system("sh ./gen_plist.sh")
 
 	# plist upload
-
 	plist_path = options[:app_title] + ".plist"
 
 	if File.exists?(plist_path)
@@ -103,6 +102,8 @@ begin
 
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_PLIST=\"#{public_url_plist}\"\n") }
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_URL_PLIST=\"#{public_url_plist}\"\n") }
+	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_EMAIL_READY_URL=\"itms-services://?action=download-manifest&url=#{public_url_plist}\"\n") }
+	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_EMAIL_READY_URL=\"itms-services://?action=download-manifest&url=#{public_url_plist}\"\n") }
 
 rescue => ex
 	puts "Exception happened: #{ex}"
