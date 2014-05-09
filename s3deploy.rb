@@ -71,22 +71,11 @@ begin
 		puts "Uploading dsym #{options[:dsym]} to bucket #{options[:bucket_name]}."
 	end
 
-	# plist upload
-
-	plist_path = options[:app_title] + ".plist"
-	if File.exists?(plist_path)
-		s3.buckets[options[:bucket_name]].objects[path + plist_path].write(:file => plist_path, :acl => access_level)
-		puts "Uploading plist #{options[:plist]} to bucket #{options[:bucket_name]}."
-	else
-		puts "NO PLIST :<"
-	end
-
 	# public url
 	# TODO consider using url_for
 	public_url = s3.buckets[options[:bucket_name]].objects[path].public_url
 	public_url_ipa = s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:ipa])].public_url
 	public_url_dsym = s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:dsym])].public_url
-	# public_url_plist = s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:dsym])].public_url
 
 	puts public_url_ipa
 	puts public_url_dsym
@@ -96,6 +85,27 @@ begin
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_DSYM=\"#{public_url_dsym}\"\n") }
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_URL_IPA=\"#{public_url_ipa}\"\n") }
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_URL_DSYM=\"#{public_url_dsym}\"\n") }
+
+	ENV['HOME'] = public_url_ipa
+
+	# plist generation - we have to run it after we have the public url to ipa
+	system("sh ./gen_plist.sh")
+
+	# plist upload
+
+	plist_path = options[:app_title] + ".plist"
+	
+	if File.exists?(plist_path)
+		s3.buckets[options[:bucket_name]].objects[path + plist_path].write(:file => plist_path, :acl => access_level)
+		puts "Uploading plist #{options[:plist]} to bucket #{options[:bucket_name]}."
+	else
+		puts "NO PLIST :<"
+	end
+
+	public_url_plist = s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:dsym])].public_url
+
+	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_PLIST=\"#{public_url_plist}\"\n") }
+	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_URL_PLIST=\"#{public_url_plist}\"\n") }
 
 rescue => ex
 	puts "Exception happened: #{ex}"

@@ -6,6 +6,5 @@
 #export SSL_CERT_FILE=$HOME/cacert.pem
 
 bundle install
-sh ./gen_plist.sh
 ruby ./s3deploy.rb
 exit $?
