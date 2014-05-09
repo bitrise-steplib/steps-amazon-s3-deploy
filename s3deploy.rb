@@ -5,6 +5,7 @@ options = {
 					status:	ENV['CONCRETE_ARCHIVE_STATUS'],
 						 ipa: ENV['CONCRETE_IPA_PATH'],
 						dsym:	ENV['CONCRETE_DSYM_PATH'],
+					 plist: ENV['S3_DEPLOY_PLIST_PATH'],
 				app_slug: ENV['CONCRETE_APP_SLUG'],
 			 app_title: ENV['CONCRETE_APP_TITLE'],
 			build_slug: ENV['CONCRETE_BUILD_SLUG'],
