@@ -5,7 +5,6 @@ options = {
 					status:	ENV['CONCRETE_ARCHIVE_STATUS'],
 						 ipa: ENV['CONCRETE_IPA_PATH'],
 						dsym:	ENV['CONCRETE_DSYM_PATH'],
-					 plist: ENV['S3_DEPLOY_PLIST_PATH'],
 				app_slug: ENV['CONCRETE_APP_SLUG'],
 			 app_title: ENV['CONCRETE_APP_TITLE'],
 			build_slug: ENV['CONCRETE_BUILD_SLUG'],
@@ -73,8 +72,10 @@ begin
 	end
 
 	# plist upload
-	if File.exists?(options[:plist])
-		s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:plist])].write(:file => options[:plist], :acl => access_level)
+
+	plist_path = options[:app_title] + ".plist"
+	if File.exists?(plist_path)
+		s3.buckets[options[:bucket_name]].objects[path + plist_path].write(:file => plist_path, :acl => access_level)
 		puts "Uploading plist #{options[:plist]} to bucket #{options[:bucket_name]}."
 	else
 		puts "NO PLIST :<"

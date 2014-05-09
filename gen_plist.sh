@@ -2,8 +2,8 @@
 # Generates an external xml plist with the minimum required entries from inner info.plist in ipa
 
 unzip "$CONCRETE_IPA_PATH" > /dev/null
-BUNDLEID="/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' ./Payload/$CONCRETE_APP_TITLE.app/Info.plist"
-BUNDLEVER="/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' ./Payload/$CONCRETE_APP_TITLE.app/Info.plist"
+BUNDLEID=`/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" ./Payload/"$CONCRETE_APP_TITLE".app/Info.plist`
+BUNDLEVER=`/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" ./Payload/"$CONCRETE_APP_TITLE".app/Info.plist`
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
 <plist version=\"1.0\">
@@ -35,6 +35,3 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 	</array>
 </dict>
 </plist>" > "$CONCRETE_APP_TITLE".plist
-
-export S3_DEPLOY_PLIST_PATH="$CONCRETE_APP_TITLE".plist
-cat "$CONCRETE_APP_TITLE".plist
