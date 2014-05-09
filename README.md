@@ -19,12 +19,12 @@ This Step depends on steps-xcode-builder's Archive step
 - S3_REGION_NAME			(optional)
 - S3_PATH_IN_BUCKET			(optional, default = concrete_{app_title}_{app_slug}/build_{build_slug})
 - S3_FILE_ACCESS_LEVEL		[default=public_read] possible values: 
-	private
-	public_read
-	public_read_write
-	authenticated_read
-	bucket_owner_read
-	bucket_owner_full_control
+  1. private
+  2. public_read
+  3. public_read_write
+  4. authenticated_read
+  5. bucket_owner_read
+  6. bucket_owner_full_control
 
 # Output Environment Variables
 - CONCRETE_DEPLOY_URL
