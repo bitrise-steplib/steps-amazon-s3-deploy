@@ -2,17 +2,18 @@ require 'rubygems'
 require 'aws-sdk'
 
 options = {
-	status: ENV['CONCRETE_ARCHIVE_STATUS'],
-	ipa: ENV['CONCRETE_IPA_PATH'],
-	dsym: ENV['CONCRETE_DSYM_PATH'],
-	app_slug: ENV['CONCRETE_APP_SLUG'],
-	app_title: ENV['CONCRETE_APP_TITLE'],
-	build_slug: ENV['CONCRETE_BUILD_SLUG'],
-	access_key: ENV['S3_DEPLOY_AWS_ACCESS_KEY'],
-	secret_key: ENV['S3_DEPLOY_AWS_SECRET_KEY'],
-	bucket_name: ENV['S3_BUCKET_NAME'],
-	region_name: ENV['S3_REGION_NAME'],
-	path_in_bucket: ENV['S3_PATH_IN_BUCKET']
+					status:	ENV['CONCRETE_ARCHIVE_STATUS'],
+						 ipa: ENV['CONCRETE_IPA_PATH'],
+						dsym:	ENV['CONCRETE_DSYM_PATH'],
+				app_slug: ENV['CONCRETE_APP_SLUG'],
+			 app_title: ENV['CONCRETE_APP_TITLE'],
+			build_slug: ENV['CONCRETE_BUILD_SLUG'],
+			access_key:	ENV['S3_DEPLOY_AWS_ACCESS_KEY'],
+			secret_key:	ENV['S3_DEPLOY_AWS_SECRET_KEY'],
+		 bucket_name:	ENV['S3_BUCKET_NAME'],
+		 region_name:	ENV['S3_REGION_NAME'],
+	path_in_bucket: ENV['S3_PATH_IN_BUCKET'],
+						 acl: ENV['S3_FILE_ACCESS_LEVEL']
 }
 
 p "Options: #{options}"
@@ -53,13 +54,18 @@ begin
 		path = "concrete_#{options[:app_title]}_#{options[:app_slug]}/build_#{options[:build_slug]}/"
 	end
 
+	access_level = 'public_read'
+	if (options[:acl])
+		access_level = options[:acl]
+	end
+
 	# ipa upload
-	s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:ipa])].write(:file => options[:ipa], :acl => 'public_read')
+	s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:ipa])].write(:file => options[:ipa], :acl => access_level)
 	puts "Uploading ipa #{options[:ipa]} to bucket #{options[:bucket_name]}. Path= #{path}"
 
 	# dsym upload
 	if File.exists?(options[:dsym])
-		s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:dsym])].write(:file => options[:dsym])
+		s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:dsym])].write(:file => options[:dsym], :acl => access_level)
 		puts "Uploading dsym #{options[:dsym]} to bucket #{options[:bucket_name]}. Path= #{path}"
 	end
 
