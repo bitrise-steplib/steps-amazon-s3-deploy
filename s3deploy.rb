@@ -55,6 +55,8 @@ begin
 		path = "concrete_#{options[:app_title]}_#{options[:app_slug]}/build_#{options[:build_slug]}/"
 	end
 
+	puts path
+
 	access_level = 'public_read'
 	if (options[:acl])
 		access_level = options[:acl]
@@ -62,12 +64,20 @@ begin
 
 	# ipa upload
 	s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:ipa])].write(:file => options[:ipa], :acl => access_level)
-	puts "Uploading ipa #{options[:ipa]} to bucket #{options[:bucket_name]}. Path= #{path}"
+	puts "Uploading ipa #{options[:ipa]} to bucket #{options[:bucket_name]}."
 
 	# dsym upload
 	if File.exists?(options[:dsym])
 		s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:dsym])].write(:file => options[:dsym], :acl => access_level)
-		puts "Uploading dsym #{options[:dsym]} to bucket #{options[:bucket_name]}. Path= #{path}"
+		puts "Uploading dsym #{options[:dsym]} to bucket #{options[:bucket_name]}."
+	end
+
+	# plist upload
+	if File.exists?(options[:plist])
+		s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:plist])].write(:file => options[:plist], :acl => access_level)
+		puts "Uploading plist #{options[:plist]} to bucket #{options[:bucket_name]}."
+	else
+		puts "NO PLIST :<"
 	end
 
 	# public url
