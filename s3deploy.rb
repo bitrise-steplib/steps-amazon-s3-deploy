@@ -93,7 +93,7 @@ begin
 
 	if File.exists?(plist_path)
 		s3.buckets[options[:bucket_name]].objects[path + plist_path].write(:file => plist_path, :acl => access_level)
-		puts "Uploading plist #{options[:plist]} to bucket #{options[:bucket_name]}."
+		puts "Uploading plist #{plist_path} to bucket #{options[:bucket_name]}."
 	else
 		puts "NO PLIST :<"
 	end
