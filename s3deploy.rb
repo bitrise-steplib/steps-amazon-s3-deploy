@@ -53,12 +53,12 @@ begin
 	end
 
 	# ipa upload
-	s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:ipa]].write(:file => options[:ipa])
+	s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:ipa])].write(:file => options[:ipa])
 	puts "Uploading ipa #{options[:ipa]} to bucket #{options[:bucket_name]}. Path= #{path}"
 
 	# dsym upload
 	if File.exists?(options[:dsym])
-		s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:dsym]].write(:file => options[:dsym])
+		s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:dsym])].write(:file => options[:dsym])
 		puts "Uploading dsym #{options[:dsym]} to bucket #{options[:bucket_name]}. Path= #{path}"
 	end
 
