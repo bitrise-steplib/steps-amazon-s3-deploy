@@ -65,8 +65,10 @@ begin
 
 	# public url
 	public_url = s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:ipa])].public_url
+	public_url2 = s3.buckets[options[:bucket_name]].objects[path].public_url
 
 	puts public_url
+	puts public_url2
 	# output variables
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL=\"#{public_url}\"\n") }
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_URL=\"#{public_url}\"\n") }
