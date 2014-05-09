@@ -47,7 +47,7 @@ begin
 	# define path
 	path = ""
 	if (options[:path_in_bucket])
-		path = "/#{options[:path_in_bucket]}/"
+		path = "#{options[:path_in_bucket]}/"
 	else
 		path = "concrete_#{options[:app_title]}_#{options[:app_slug]}/build_#{options[:build_slug]}/"
 	end
