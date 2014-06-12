@@ -1,7 +1,7 @@
 steps-amazon-s3-deploy
 ======================
 
-Concrete Step to Deploy an xcode archive to Amazon S3
+Concrete Step to Deploy an Xcode archive to Amazon S3
 
 This Step depends on steps-xcode-builder's Archive step
 
@@ -27,12 +27,6 @@ This Step depends on steps-xcode-builder's Archive step
   * bucket_owner_full_control
 
 # Output Environment Variables
-- CONCRETE_DEPLOY_URL_IPA
-- CONCRETE_DEPLOY_URL_DSYM
-- CONCRETE_DEPLOY_URL_PLIST
-- CONCRETE_DEPLOY_STATUS=[success/failed]
-- CONCRETE_DEPLOY_EMAIL_READY_URL
-- .
 - S3_DEPLOY_STEP_URL_IPA
 - S3_DEPLOY_STEP_URL_DSYM
 - S3_DEPLOY_STEP_URL_PLIST

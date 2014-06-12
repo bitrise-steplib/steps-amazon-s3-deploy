@@ -80,8 +80,6 @@ begin
 	# output variables
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_IPA=\"#{public_url_ipa}\"\n") }
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_DSYM=\"#{public_url_dsym}\"\n") }
-	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_URL_IPA=\"#{public_url_ipa}\"\n") }
-	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_URL_DSYM=\"#{public_url_dsym}\"\n") }
 
 	ENV['S3_DEPLOY_STEP_URL_IPA'] = "#{public_url_ipa}"
 
@@ -101,9 +99,7 @@ begin
 	public_url_plist = s3.buckets[options[:bucket_name]].objects[path + plist_path].public_url
 
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_PLIST=\"#{public_url_plist}\"\n") }
-	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_URL_PLIST=\"#{public_url_plist}\"\n") }
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_EMAIL_READY_URL=\"itms-services://?action=download-manifest&url=#{public_url_plist}\"\n") }
-	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_EMAIL_READY_URL=\"itms-services://?action=download-manifest&url=#{public_url_plist}\"\n") }
 
 rescue => ex
 	puts "Exception happened: #{ex}"
@@ -111,6 +107,5 @@ rescue => ex
 	exit 1
 ensure
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_STATUS=\"#{status}\"\n") }
-	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export CONCRETE_DEPLOY_STATUS=\"#{status}\"\n") }
 	puts "status=" + status
 end
