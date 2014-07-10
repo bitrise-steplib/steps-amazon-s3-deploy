@@ -23,7 +23,7 @@ inputs:
       Amazon AWS Access Key
     mapped_to: S3_DEPLOY_AWS_ACCESS_KEY
   - title: |
-      Amazon AWS Secret Key
+      Amazon AWS Secret Access Key
     mapped_to: S3_DEPLOY_AWS_SECRET_KEY
   - title: |
       Amazon S3 Bucket Name
