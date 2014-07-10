@@ -5,9 +5,6 @@ description: |
 
 inputs:
   - title: |
-      Concrete Archive Step's Status output (passed automatically)
-    mapped_to: CONCRETE_ARCHIVE_STATUS
-  - title: |
       Concrete Archive Step's IPA path output (passed automatically)
     mapped_to: CONCRETE_IPA_PATH
   - title: |

@@ -2,7 +2,6 @@ require 'rubygems'
 require 'aws-sdk'
 
 options = {
-					status:	ENV['CONCRETE_ARCHIVE_STATUS'],
 						 ipa: ENV['CONCRETE_IPA_PATH'],
 						dsym:	ENV['CONCRETE_DSYM_PATH'],
 				app_slug: ENV['CONCRETE_APP_SLUG'],

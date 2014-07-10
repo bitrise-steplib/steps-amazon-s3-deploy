@@ -6,7 +6,6 @@ Concrete Step to Deploy an Xcode archive to Amazon S3
 This Step depends on steps-xcode-builder's Archive step
 
 # Input Environment Variables
-- CONCRETE_ARCHIVE_STATUS 	(passed automatically)
 - CONCRETE_IPA_PATH			(passed automatically)
 - CONCRETE_DSYM_PATH		(passed automatically)
 - CONCRETE_APP_SLUG			(passed automatically)
