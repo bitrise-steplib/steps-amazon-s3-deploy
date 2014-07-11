@@ -87,7 +87,7 @@ function test_env_cleanup {
   unset S3_DEPLOY_AWS_ACCESS_KEY
 	unset S3_DEPLOY_AWS_SECRET_KEY
 	unset S3_BUCKET_NAME
-  unset CONCRETE_IPA_PATH
+  unset BITRISE_IPA_PATH
 }
 
 function print_new_test {
@@ -119,13 +119,13 @@ test_results_error_count=0
   # Set env vars
   export S3_DEPLOY_AWS_SECRET_KEY="dsa4321"
   export S3_BUCKET_NAME="dsa4321"
-  export CONCRETE_IPA_PATH="$test_ipa_path"
+  export BITRISE_IPA_PATH="$test_ipa_path"
 
   # All env vars should exist except TWILIO_ACCOUNT_SID
   expect_error "TWILIO_ACCOUNT_SID environment variable should NOT be set" is_not_empty "$TWILIO_ACCOUNT_SID"
   expect_success "S3_DEPLOY_AWS_SECRET_KEY environment variable should be set" is_not_empty "$S3_DEPLOY_AWS_SECRET_KEY"
   expect_success "S3_BUCKET_NAME environment variable should be set" is_not_empty "$S3_BUCKET_NAME"
-  expect_success "CONCRETE_IPA_PATH environment variable should be set" is_not_empty "$CONCRETE_IPA_PATH"
+  expect_success "BITRISE_IPA_PATH environment variable should be set" is_not_empty "$BITRISE_IPA_PATH"
 
   # Send sms request
   expect_error "The command should be called, but should not complete sucessfully" run_target_command

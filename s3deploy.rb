@@ -2,11 +2,11 @@ require 'rubygems'
 require 'aws-sdk'
 
 options = {
-						 ipa: ENV['CONCRETE_IPA_PATH'],
-						dsym:	ENV['CONCRETE_DSYM_PATH'],
-				app_slug: ENV['CONCRETE_APP_SLUG'],
-			 app_title: ENV['CONCRETE_APP_TITLE'],
-			build_slug: ENV['CONCRETE_BUILD_SLUG'],
+						 ipa: ENV['BITRISE_IPA_PATH'],
+						dsym:	ENV['BITRISE_DSYM_PATH'],
+				app_slug: ENV['BITRISE_APP_SLUG'],
+			 app_title: ENV['BITRISE_APP_TITLE'],
+			build_slug: ENV['BITRISE_BUILD_SLUG'],
 			access_key:	ENV['S3_DEPLOY_AWS_ACCESS_KEY'],
 			secret_key:	ENV['S3_DEPLOY_AWS_SECRET_KEY'],
 		 bucket_name:	ENV['S3_BUCKET_NAME'],
@@ -50,7 +50,7 @@ begin
 	if (options[:path_in_bucket])
 		path = options[:path_in_bucket] + "/"
 	else
-		path = "concrete_#{options[:app_title]}_#{options[:app_slug]}/build_#{options[:build_slug]}/"
+		path = "bitrise_#{options[:app_title]}_#{options[:app_slug]}/build_#{options[:build_slug]}/"
 	end
 
 	puts path
