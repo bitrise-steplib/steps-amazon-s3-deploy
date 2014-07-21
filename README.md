@@ -16,7 +16,7 @@ This Step depends on steps-xcode-builder's Archive step
 - S3_DEPLOY_AWS_SECRET_KEY
 - S3_BUCKET_NAME
 - S3_REGION_NAME			(optional)
-- S3_PATH_IN_BUCKET			(optional, default = bitrise_{app_title}_{app_slug}/build_{build_slug})
+- S3_PATH_IN_BUCKET			(optional, default = {timestamp}_bitrise_{app_title}_{app_slug}/build_{build_slug})
 - S3_FILE_ACCESS_LEVEL		(optional, default=public_read) possible values: 
   * private
   * public_read
