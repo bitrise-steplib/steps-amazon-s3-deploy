@@ -50,7 +50,8 @@ begin
 	if (options[:path_in_bucket])
 		path = options[:path_in_bucket] + "/"
 	else
-		path = "bitrise_#{options[:app_title]}_#{options[:app_slug]}/build_#{options[:build_slug]}/"
+		utc_timestamp = Time.now.utc.to_i
+		path = "#{utc_timestamp}_bitrise_#{options[:app_title]}_#{options[:app_slug]}/build_#{options[:build_slug]}/"
 	end
 
 	puts path
