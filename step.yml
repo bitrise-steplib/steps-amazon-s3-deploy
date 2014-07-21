@@ -1,32 +1,29 @@
 ---
 name: Deploy to Amazon S3
 description: |
-  Concrete Step to Deploy an Xcode archive to Amazon S3
+  Bitrise Step to Deploy an Xcode archive to Amazon S3
 
 inputs:
   - title: |
-      Concrete Archive Step's Status output (passed automatically)
-    mapped_to: CONCRETE_ARCHIVE_STATUS
+      BITRISE Archive Step's IPA path output (passed automatically)
+    mapped_to: BITRISE_IPA_PATH
   - title: |
-      Concrete Archive Step's IPA path output (passed automatically)
-    mapped_to: CONCRETE_IPA_PATH
+      BITRISE Archive Step's DSYM output (passed automatically)
+    mapped_to: BITRISE_DSYM_PATH
   - title: |
-      Concrete Archive Step's DSYM output (passed automatically)
-    mapped_to: CONCRETE_DSYM_PATH
+      BITRISE's App-Slug variable (passed automatically)
+    mapped_to: BITRISE_APP_SLUG
   - title: |
-      Concrete's App-Slug variable (passed automatically)
-    mapped_to: CONCRETE_APP_SLUG
+      BITRISE's App-Title variable (passed automatically)
+    mapped_to: BITRISE_APP_TITLE
   - title: |
-      Concrete's App-Title variable (passed automatically)
-    mapped_to: CONCRETE_APP_TITLE
-  - title: |
-      Concrete's Build-Slug variable (passed automatically)
-    mapped_to: CONCRETE_BUILD_SLUG
+      BITRISE's Build-Slug variable (passed automatically)
+    mapped_to: BITRISE_BUILD_SLUG
   - title: |
       Amazon AWS Access Key
     mapped_to: S3_DEPLOY_AWS_ACCESS_KEY
   - title: |
-      Amazon AWS Secret Key
+      Amazon AWS Secret Access Key
     mapped_to: S3_DEPLOY_AWS_SECRET_KEY
   - title: |
       Amazon S3 Bucket Name
@@ -35,7 +32,7 @@ inputs:
       Amazon S3 Region Name (optional)
     mapped_to: S3_REGION_NAME
   - title: |
-      Amazon S3 File Path In Bucket (optional, default = concrete_{app_title}_{app_slug}/build_{build_slug})
+      Amazon S3 File Path In Bucket (optional, default = bitrise_{app_title}_{app_slug}/build_{build_slug})
     mapped_to: S3_PATH_IN_BUCKET
   - title: |
       Amazon S3 file access level (optional, default=public_read) possible values:
