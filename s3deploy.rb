@@ -29,7 +29,7 @@ end
 def puts_section_to_formatted_output(section_text)
 	open($formatted_output_file_path, 'a') { |f|
 		f.puts
-		f.puts(text)
+		f.puts(section_text)
 		f.puts
 	}
 end
