@@ -137,10 +137,27 @@ begin
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_EMAIL_READY_URL=\"#{email_ready_link_url}\"\n") }
 
 	puts_section_to_formatted_output("## Success")
-	puts_string_to_formatted_output("* **IPA link**: [#{public_url_ipa}](#{public_url_ipa})")
-	puts_string_to_formatted_output("* **DSYM link**: [#{public_url_dsym}](#{public_url_dsym})")
-	puts_string_to_formatted_output("* **Plist link**: [#{public_url_plist}](#{public_url_plist})")
-	puts_string_to_formatted_output("* **Install link** (open this link on an iOS device to install the app): [#{email_ready_link_url}](#{email_ready_link_url})")
+	#
+	puts_section_to_formatted_output("### IPA")
+	puts_section_to_formatted_output("[link](#{public_url_ipa})")
+	puts_section_to_formatted_output("Raw:")
+	puts_section_to_formatted_output("    #{public_url_ipa}")
+	#
+	puts_section_to_formatted_output("### DSYM")
+	puts_section_to_formatted_output("[link](#{public_url_dsym})")
+	puts_section_to_formatted_output("Raw:")
+	puts_section_to_formatted_output("    #{public_url_dsym}")
+	#
+	puts_section_to_formatted_output("### Plist")
+	puts_section_to_formatted_output("[link](#{public_url_plist})")
+	puts_section_to_formatted_output("Raw:")
+	puts_section_to_formatted_output("    #{public_url_plist}")
+	#
+	puts_section_to_formatted_output("### Install link")
+	puts_section_to_formatted_output("**open this link on an iOS device to install the app**")
+	puts_section_to_formatted_output("[link](#{email_ready_link_url})")
+	puts_section_to_formatted_output("Raw:")
+	puts_section_to_formatted_output("    #{email_ready_link_url}")
 
 rescue => ex
 	err_msg = "Exception happened: #{ex}"
