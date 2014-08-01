@@ -17,30 +17,64 @@ options = {
 
 p "Options: #{options}"
 
+
+$formatted_output_file_path = ENV['BITRISE_STEP_FORMATTED_OUTPUT_FILE_PATH']
+
+def puts_string_to_formatted_output(text)
+	open($formatted_output_file_path, 'a') { |f|
+		f.puts(text)
+	}
+end
+
+def puts_section_to_formatted_output(section_text)
+	open($formatted_output_file_path, 'a') { |f|
+		f.puts
+		f.puts(text)
+		f.puts
+	}
+end
+
+puts_section_to_formatted_output('# Amazon S3 Deploy')
+
+def cleanup_before_error_exit(reason_msg=nil)
+	puts_section_to_formatted_output("## Failed")
+	unless reason_msg.nil?
+		puts_section_to_formatted_output(reason_msg)
+	end
+	puts_section_to_formatted_output("Check the Logs for details.")
+end
+
+
 status = "success"
 begin
 	# checks
 	#
 	# ipa
 	unless File.exists?(options[:ipa])
-  	puts "No IPA found to deploy. Terminating."
-  	exit!
+		err_msg = "No IPA found to deploy. Terminating."
+		puts err_msg
+		cleanup_before_error_exit(err_msg)
+		exit!
 	end
 	# access_key
 	unless options[:access_key]
-  	puts "No AWS access key provided. Terminating."
-  	exit!
+		err_msg = "No AWS access key provided. Terminating."
+		puts err_msg
+		cleanup_before_error_exit(err_msg)
+		exit!
 	end
 	# secret_key
 	unless options[:secret_key]
-  	puts "No AWS secret key provided. Terminating."
-  	exit!
+		err_msg = "No AWS secret key provided. Terminating."
+		puts err_msg
+		cleanup_before_error_exit(err_msg)
+		exit!
 	end
 
 	AWS.config(
-  	:access_key_id => options[:access_key], 
-  	:secret_access_key => options[:secret_key],
-  	:region => options[:region_name]
+		:access_key_id => options[:access_key], 
+		:secret_access_key => options[:secret_key],
+		:region => options[:region_name]
 	)
 
 	s3 = AWS::S3.new
@@ -99,11 +133,20 @@ begin
 	public_url_plist = s3.buckets[options[:bucket_name]].objects[path + plist_path].public_url
 
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_PLIST=\"#{public_url_plist}\"\n") }
-	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_EMAIL_READY_URL=\"itms-services://?action=download-manifest&url=#{public_url_plist}\"\n") }
+	email_ready_link_url = "itms-services://?action=download-manifest&url=#{public_url_plist}"
+	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_EMAIL_READY_URL=\"#{email_ready_link_url}\"\n") }
+
+	puts_section_to_formatted_output("## Success")
+	puts_string_to_formatted_output("* **IPA link**: [#{public_url_ipa}](#{public_url_ipa})")
+	puts_string_to_formatted_output("* **DSYM link**: [#{public_url_dsym}](#{public_url_dsym})")
+	puts_string_to_formatted_output("* **Plist link**: [#{public_url_plist}](#{public_url_plist})")
+	puts_string_to_formatted_output("* **Install link** (open this link on an iOS device to install the app): [#{email_ready_link_url}](#{email_ready_link_url})")
 
 rescue => ex
-	puts "Exception happened: #{ex}"
+	err_msg = "Exception happened: #{ex}"
+	puts err_msg
 	status = "failed"
+	cleanup_before_error_exit(err_msg)
 	exit 1
 ensure
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_STATUS=\"#{status}\"\n") }
