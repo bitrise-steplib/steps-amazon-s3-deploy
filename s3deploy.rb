@@ -4,7 +4,6 @@ options = {
 	ipa: ENV['BITRISE_IPA_PATH'],
 	dsym:	ENV['BITRISE_DSYM_PATH'],
 	app_slug: ENV['BITRISE_APP_SLUG'],
-	app_title: ENV['BITRISE_APP_TITLE'],
 	build_slug: ENV['BITRISE_BUILD_SLUG'],
 	access_key:	ENV['S3_DEPLOY_AWS_ACCESS_KEY'],
 	secret_key:	ENV['S3_DEPLOY_AWS_SECRET_KEY'],
@@ -89,7 +88,7 @@ begin
 		base_path_in_bucket = options[:path_in_bucket]
 	else
 		utc_timestamp = Time.now.utc.to_i
-		base_path_in_bucket = "#{utc_timestamp}_bitrise_#{options[:app_title]}_#{options[:app_slug]}/build_#{options[:build_slug]}"
+		base_path_in_bucket = "#{utc_timestamp}_bitrise_#{options[:app_slug]}/build_#{options[:build_slug]}"
 	end
 
 	puts " (i) Base path in Bucket: #{base_path_in_bucket}"
@@ -134,7 +133,7 @@ begin
 	system("sh ./gen_plist.sh")
 
 	# plist upload
-	plist_local_path = options[:app_title] + ".plist"
+	plist_local_path = "Info.plist"
 
 	if File.exists?(plist_local_path)
 		plist_path_in_bucket = "#{base_path_in_bucket}/Info.plist"
