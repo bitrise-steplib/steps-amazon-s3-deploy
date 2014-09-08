@@ -15,9 +15,6 @@ inputs:
       BITRISE's App-Slug variable (passed automatically)
     mapped_to: BITRISE_APP_SLUG
   - title: |
-      BITRISE's App-Title variable (passed automatically)
-    mapped_to: BITRISE_APP_TITLE
-  - title: |
       BITRISE's Build-Slug variable (passed automatically)
     mapped_to: BITRISE_BUILD_SLUG
   - title: |

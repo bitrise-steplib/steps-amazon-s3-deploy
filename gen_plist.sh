@@ -9,7 +9,7 @@ APP_NAME=${BASE_NAME%.*}
 BUNDLEID=`/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" ./Payload/"$APP_NAME".app/Info.plist`
 BUNDLEVER=`/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" ./Payload/"$APP_NAME".app/Info.plist`
 
-generated_plist_path="${BITRISE_APP_TITLE}.plist"
+generated_plist_path="./Info.plist"
 if [ -e "${generated_plist_path}" ]; then
 	rm "${generated_plist_path}"
 fi
