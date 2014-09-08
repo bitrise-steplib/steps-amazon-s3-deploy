@@ -121,8 +121,6 @@ test_results_error_count=0
   export S3_BUCKET_NAME="dsa4321"
   export BITRISE_IPA_PATH="$test_ipa_path"
 
-  # All env vars should exist except TWILIO_ACCOUNT_SID
-  expect_error "TWILIO_ACCOUNT_SID environment variable should NOT be set" is_not_empty "$TWILIO_ACCOUNT_SID"
   expect_success "S3_DEPLOY_AWS_SECRET_KEY environment variable should be set" is_not_empty "$S3_DEPLOY_AWS_SECRET_KEY"
   expect_success "S3_BUCKET_NAME environment variable should be set" is_not_empty "$S3_BUCKET_NAME"
   expect_success "BITRISE_IPA_PATH environment variable should be set" is_not_empty "$BITRISE_IPA_PATH"
