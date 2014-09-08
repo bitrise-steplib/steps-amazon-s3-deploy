@@ -1,18 +1,16 @@
-require 'rubygems'
-require 'aws-sdk'
+#
 
 options = {
-						 ipa: ENV['BITRISE_IPA_PATH'],
-						dsym:	ENV['BITRISE_DSYM_PATH'],
-				app_slug: ENV['BITRISE_APP_SLUG'],
-			 app_title: ENV['BITRISE_APP_TITLE'],
-			build_slug: ENV['BITRISE_BUILD_SLUG'],
-			access_key:	ENV['S3_DEPLOY_AWS_ACCESS_KEY'],
-			secret_key:	ENV['S3_DEPLOY_AWS_SECRET_KEY'],
-		 bucket_name:	ENV['S3_BUCKET_NAME'],
-		 region_name:	ENV['S3_REGION_NAME'],
+	ipa: ENV['BITRISE_IPA_PATH'],
+	dsym:	ENV['BITRISE_DSYM_PATH'],
+	app_slug: ENV['BITRISE_APP_SLUG'],
+	app_title: ENV['BITRISE_APP_TITLE'],
+	build_slug: ENV['BITRISE_BUILD_SLUG'],
+	access_key:	ENV['S3_DEPLOY_AWS_ACCESS_KEY'],
+	secret_key:	ENV['S3_DEPLOY_AWS_SECRET_KEY'],
+	bucket_name:	ENV['S3_BUCKET_NAME'],
 	path_in_bucket: ENV['S3_PATH_IN_BUCKET'],
-						 acl: ENV['S3_FILE_ACCESS_LEVEL']
+	acl: ENV['S3_FILE_ACCESS_LEVEL']
 }
 
 p "Options: #{options}"
@@ -37,6 +35,7 @@ end
 puts_section_to_formatted_output('# Amazon S3 Deploy')
 
 def cleanup_before_error_exit(reason_msg=nil)
+	puts " [!] Error: #{reason_msg}"
 	puts_section_to_formatted_output("## Failed")
 	unless reason_msg.nil?
 		puts_section_to_formatted_output(reason_msg)
@@ -44,72 +43,86 @@ def cleanup_before_error_exit(reason_msg=nil)
 	puts_section_to_formatted_output("Check the Logs for details.")
 end
 
+def s3_object_uri_for_bucket_and_path(bucket_name, path_in_bucket)
+	return "s3://#{bucket_name}/#{path_in_bucket}"
+end
+
+def public_url_for_bucket_and_path(bucket_name, path_in_bucket)
+	return "https://#{bucket_name}.s3.amazonaws.com/#{path_in_bucket}"
+end
+
+
+$s3cmd_config_path = "s3cfg.config"
+def do_s3cmd(command_str)
+	return system(%Q{s3cmd -c "#{$s3cmd_config_path}" #{command_str}})
+end
 
 status = "success"
 begin
 	# checks
 	#
 	# ipa
-	unless File.exists?(options[:ipa])
-		err_msg = "No IPA found to deploy. Terminating."
-		puts err_msg
-		cleanup_before_error_exit(err_msg)
-		exit!
-	end
+	raise "No IPA found to deploy. Terminating." unless File.exists?(options[:ipa])
+	# dsym
+	raise "No dSYM found to deploy. Terminating." unless File.exists?(options[:dsym])
 	# access_key
-	unless options[:access_key]
-		err_msg = "No AWS access key provided. Terminating."
-		puts err_msg
-		cleanup_before_error_exit(err_msg)
-		exit!
-	end
+	raise "No AWS access key provided. Terminating." unless options[:access_key]
 	# secret_key
-	unless options[:secret_key]
-		err_msg = "No AWS secret key provided. Terminating."
-		puts err_msg
-		cleanup_before_error_exit(err_msg)
-		exit!
+	raise "No AWS secret key provided. Terminating." unless options[:secret_key]
+
+	# Install s3cmd
+	puts " (i) Checking s3cmd"
+	if system("s3cmd --version")
+		puts " (i) s3cmd already installed"
+	else
+		puts " (i) installing s3cmd"
+		raise "Failed to install s3cmd" unless system("brew install s3cmd")
+		raise "Failed to install s3cmd (--version)" unless system("s3cmd --version")
 	end
-
-	AWS.config(
-		:access_key_id => options[:access_key], 
-		:secret_access_key => options[:secret_key],
-		:region => options[:region_name]
-	)
-
-	s3 = AWS::S3.new
+	
+	# AWS configs
+	raise "Failed to set access keys" unless system(%Q{printf %"s\n" '[default]' "access_key = #{options[:access_key]}" "secret_key = #{options[:secret_key]}" > #{$s3cmd_config_path}})
 
 	# define object path
-	path = ""
-	if (options[:path_in_bucket])
-		path = options[:path_in_bucket] + "/"
+	base_path_in_bucket = ""
+	if options[:path_in_bucket]
+		base_path_in_bucket = options[:path_in_bucket]
 	else
 		utc_timestamp = Time.now.utc.to_i
-		path = "#{utc_timestamp}_bitrise_#{options[:app_title]}_#{options[:app_slug]}/build_#{options[:build_slug]}/"
+		base_path_in_bucket = "#{utc_timestamp}_bitrise_#{options[:app_title]}_#{options[:app_slug]}/build_#{options[:build_slug]}"
 	end
 
-	puts path
+	puts " (i) Base path in Bucket: #{base_path_in_bucket}"
 
-	access_level = 'public_read'
+	# supported: private, public_read
+	acl_arg = '--acl-public'
 	if (options[:acl])
-		access_level = options[:acl]
+		case options[:acl]
+		when 'public_read'
+			acl_arg = '--acl-public'
+		when 'private'
+			acl_arg = '--acl-private'
+		else
+			raise "Invalid ACL option: #{options[:acl]}"
+		end
 	end
 
 	# ipa upload
-	s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:ipa])].write(:file => options[:ipa], :acl => access_level)
-	puts "Uploading ipa #{options[:ipa]} to bucket #{options[:bucket_name]}."
+	ipa_path_in_bucket = "#{base_path_in_bucket}/#{File.basename(options[:ipa])}"
+	ipa_full_s3_path = s3_object_uri_for_bucket_and_path(options[:bucket_name], ipa_path_in_bucket)
+	public_url_ipa = public_url_for_bucket_and_path(options[:bucket_name], ipa_path_in_bucket)
+	#
+	raise "Failed to upload IPA" unless do_s3cmd(%Q{put "#{options[:ipa]}" "#{ipa_full_s3_path}"})
+	raise "Failed to set IPA ACL" unless do_s3cmd(%Q{setacl "#{ipa_full_s3_path}" #{acl_arg}})
 
 	# dsym upload
-	if File.exists?(options[:dsym])
-		s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:dsym])].write(:file => options[:dsym], :acl => access_level)
-		puts "Uploading dsym #{options[:dsym]} to bucket #{options[:bucket_name]}."
-	end
+	dsym_path_in_bucket = "#{base_path_in_bucket}/#{File.basename(options[:dsym])}"
+	dsym_full_s3_path = s3_object_uri_for_bucket_and_path(options[:bucket_name], dsym_path_in_bucket)
+	public_url_dsym = public_url_for_bucket_and_path(options[:bucket_name], dsym_path_in_bucket)
+	#
+	raise "Failed to upload IPA" unless do_s3cmd(%Q{put "#{options[:dsym]}" #{dsym_full_s3_path}})
+	raise "Failed to set dSYM ACL" unless do_s3cmd(%Q{setacl "#{dsym_full_s3_path}" #{acl_arg}})
 
-	# public url
-	# TODO consider using url_for
-	public_url = s3.buckets[options[:bucket_name]].objects[path].public_url
-	public_url_ipa = s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:ipa])].public_url
-	public_url_dsym = s3.buckets[options[:bucket_name]].objects[path + File.basename(options[:dsym])].public_url
 	
 	# output variables
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_IPA=\"#{public_url_ipa}\"\n") }
@@ -121,16 +134,19 @@ begin
 	system("sh ./gen_plist.sh")
 
 	# plist upload
-	plist_path = options[:app_title] + ".plist"
+	plist_local_path = options[:app_title] + ".plist"
 
-	if File.exists?(plist_path)
-		s3.buckets[options[:bucket_name]].objects[path + plist_path].write(:file => plist_path, :acl => access_level)
-		puts "Uploading plist #{plist_path} to bucket #{options[:bucket_name]}."
+	if File.exists?(plist_local_path)
+		plist_path_in_bucket = "#{base_path_in_bucket}/#{File.basename(plist_local_path)}"
+		plist_full_s3_path="s3://#{options[:bucket_name]}/#{plist_path_in_bucket}"
+		public_url_plist = public_url_for_bucket_and_path(options[:bucket_name], plist_path_in_bucket)
+		#
+		raise "Failed to upload IPA" unless do_s3cmd(%Q{put "#{plist_local_path}" #{plist_full_s3_path}})
+		raise "Failed to set Plist ACL" unless do_s3cmd(%Q{setacl "#{plist_full_s3_path}" #{acl_arg}})
+		raise "Failed to remove Plist" unless system(%Q{rm "#{plist_local_path}"})
 	else
 		puts "NO PLIST :<"
 	end
-
-	public_url_plist = s3.buckets[options[:bucket_name]].objects[path + plist_path].public_url
 
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_PLIST=\"#{public_url_plist}\"\n") }
 	email_ready_link_url = "itms-services://?action=download-manifest&url=#{public_url_plist}"
@@ -160,12 +176,11 @@ begin
 	puts_section_to_formatted_output("    #{email_ready_link_url}")
 
 rescue => ex
-	err_msg = "Exception happened: #{ex}"
-	puts err_msg
 	status = "failed"
-	cleanup_before_error_exit(err_msg)
+	cleanup_before_error_exit("#{ex}")
 	exit 1
 ensure
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_STATUS=\"#{status}\"\n") }
 	puts "status=" + status
+	system("rm #{$s3cmd_config_path}")
 end
