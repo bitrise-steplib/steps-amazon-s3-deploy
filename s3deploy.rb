@@ -120,7 +120,7 @@ begin
 	dsym_full_s3_path = s3_object_uri_for_bucket_and_path(options[:bucket_name], dsym_path_in_bucket)
 	public_url_dsym = public_url_for_bucket_and_path(options[:bucket_name], dsym_path_in_bucket)
 	#
-	raise "Failed to upload IPA" unless do_s3cmd(%Q{put "#{options[:dsym]}" #{dsym_full_s3_path}})
+	raise "Failed to upload dSYM" unless do_s3cmd(%Q{put "#{options[:dsym]}" "#{dsym_full_s3_path}"})
 	raise "Failed to set dSYM ACL" unless do_s3cmd(%Q{setacl "#{dsym_full_s3_path}" #{acl_arg}})
 
 	
@@ -141,7 +141,7 @@ begin
 		plist_full_s3_path="s3://#{options[:bucket_name]}/#{plist_path_in_bucket}"
 		public_url_plist = public_url_for_bucket_and_path(options[:bucket_name], plist_path_in_bucket)
 		#
-		raise "Failed to upload IPA" unless do_s3cmd(%Q{put "#{plist_local_path}" #{plist_full_s3_path}})
+		raise "Failed to upload IPA" unless do_s3cmd(%Q{put "#{plist_local_path}" "#{plist_full_s3_path}"})
 		raise "Failed to set Plist ACL" unless do_s3cmd(%Q{setacl "#{plist_full_s3_path}" #{acl_arg}})
 		raise "Failed to remove Plist" unless system(%Q{rm "#{plist_local_path}"})
 	else
