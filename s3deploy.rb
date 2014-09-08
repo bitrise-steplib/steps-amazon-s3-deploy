@@ -88,7 +88,7 @@ begin
 		base_path_in_bucket = options[:path_in_bucket]
 	else
 		utc_timestamp = Time.now.utc.to_i
-		base_path_in_bucket = "#{utc_timestamp}_bitrise_#{options[:app_slug]}/build_#{options[:build_slug]}"
+		base_path_in_bucket = "bitrise_#{options[:app_slug]}/#{utc_timestamp}_build_#{options[:build_slug]}"
 	end
 
 	puts " (i) Base path in Bucket: #{base_path_in_bucket}"
@@ -170,7 +170,7 @@ begin
 	#
 	puts_section_to_formatted_output("### Install link")
 	puts_section_to_formatted_output("**open this link on an iOS device to install the app**")
-	puts_section_to_formatted_output("[link](#{email_ready_link_url})")
+	puts_section_to_formatted_output(%Q{<a href="#{email_ready_link_url}" target="_blank">[link]</a>})
 	puts_section_to_formatted_output("Raw:")
 	puts_section_to_formatted_output("    #{email_ready_link_url}")
 
