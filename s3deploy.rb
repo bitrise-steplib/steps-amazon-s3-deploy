@@ -137,7 +137,7 @@ begin
 	plist_local_path = options[:app_title] + ".plist"
 
 	if File.exists?(plist_local_path)
-		plist_path_in_bucket = "#{base_path_in_bucket}/#{File.basename(plist_local_path)}"
+		plist_path_in_bucket = "#{base_path_in_bucket}/Info.plist"
 		plist_full_s3_path="s3://#{options[:bucket_name]}/#{plist_path_in_bucket}"
 		public_url_plist = public_url_for_bucket_and_path(options[:bucket_name], plist_path_in_bucket)
 		#
