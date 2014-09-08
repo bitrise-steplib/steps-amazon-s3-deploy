@@ -27,7 +27,7 @@ inputs:
       Amazon S3 Bucket Name
     mapped_to: S3_BUCKET_NAME
   - title: |
-      Amazon S3 File Path In Bucket (optional, default = {timestamp}_bitrise_{app_title}_{app_slug}/build_{build_slug})
+      Amazon S3 File Path In Bucket (optional, default = bitrise_{app_slug}/{timestamp}_build_{build_slug})
     mapped_to: S3_PATH_IN_BUCKET
   - title: |
       Amazon S3 file access level (optional, default=public_read) possible values:
