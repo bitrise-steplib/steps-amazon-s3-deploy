@@ -1,6 +1,11 @@
 steps-amazon-s3-deploy
 ======================
 
+TODO:
+
+* remove s3cmd settings
+* remove every generated file (plist, Payload folder)
+
 BITRISE Step to Deploy an Xcode Archive (IPA) to Amazon S3.
 
 Generates the related Plist, and generates an email-ready install URL which can be opened on an iOS device to download the app.
