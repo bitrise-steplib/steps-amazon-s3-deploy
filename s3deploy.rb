@@ -170,7 +170,7 @@ begin
 	#
 	puts_section_to_formatted_output("### Install link")
 	puts_section_to_formatted_output("**open this link on an iOS device to install the app**")
-	puts_section_to_formatted_output(%Q{<a href="#{email_ready_link_url}" target="_blank">[link]</a>})
+	puts_section_to_formatted_output(%Q{<a href="#{email_ready_link_url}" target="_blank">link</a>})
 	puts_section_to_formatted_output("Raw:")
 	puts_section_to_formatted_output("    #{email_ready_link_url}")
 
