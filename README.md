@@ -7,6 +7,10 @@ Generates the related Plist, and generates an email-ready install URL which can 
 
 This Step depends on steps-xcode-builder's Archive step
 
+This Step requires an Amazon S3 registration. To register an Amazon S3 account, [click here](http://aws.amazon.com/s3/)
+
+This Step is part of the [Open StepLib](http://www.steplib.com/), you can find its StepLib page [here](http://www.steplib.com/step/amazon-s3-deploy)
+
 
 # Input Environment Variables
 
