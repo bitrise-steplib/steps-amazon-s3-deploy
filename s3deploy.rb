@@ -76,7 +76,7 @@ begin
 	else
 		puts " (i) installing s3cmd"
 		raise "Failed to install s3cmd" unless system("brew install s3cmd")
-		raise "Failed to install s3cmd (--version)" unless system("s3cmd --version")
+		raise "Failed to get s3cmd version after install" unless system("s3cmd --version")
 	end
 	
 	# AWS configs
