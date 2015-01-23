@@ -4,61 +4,86 @@ description: |
   Bitrise Step to Deploy an Xcode archive to Amazon S3.
   Required: an Xcode Archive Step should run before this Step!
   
-  This Step requires an Amazon S3 registration.
+  This Step requires an Amazon S3 account.
   To register an Amazon S3 account, [click here](http://aws.amazon.com/s3/).
 website: https://github.com/bitrise-io/steps-amazon-s3-deploy
+fork_url: https://github.com/bitrise-io/steps-amazon-s3-deploy
 source:
   git: https://github.com/bitrise-io/steps-amazon-s3-deploy.git
 host_os_tags:
   - osx-10.9
+  - osx-10.10
+project_type_tags:
+  - ios
 type_tags:
   - deploy
-requires_admin_user: false
-
+  - amazon
+requires_admin_user: true
 inputs:
-  - title: |
-      BITRISE Archive Step's IPA path output (passed automatically)
+  -
+    title: "BITRISE Archive Step's IPA path output (passed automatically on Bitrise)"
     mapped_to: BITRISE_IPA_PATH
-  - title: |
-      BITRISE Archive Step's DSYM output (passed automatically)
+    is_expand: true
+    is_required: true
+  -
+    title: "BITRISE Archive Step's DSYM output (passed automatically on Bitrise)"
     mapped_to: BITRISE_DSYM_PATH
-  - title: |
-      BITRISE's App-Slug variable (passed automatically)
+    is_expand: true
+    is_required: true
+  -
+    title: "BITRISE's App-Slug variable (passed automatically on Bitrise)"
     mapped_to: BITRISE_APP_SLUG
-  - title: |
-      BITRISE's Build-Slug variable (passed automatically)
+    is_expand: true
+    is_required: true
+  -
+    title: "BITRISE's Build-Slug variable (passed automatically on Bitrise)"
     mapped_to: BITRISE_BUILD_SLUG
-  - title: |
-      Amazon AWS Access Key
+    is_expand: true
+    is_required: true
+  - 
+    title: "Amazon AWS Access Key"
     mapped_to: S3_DEPLOY_AWS_ACCESS_KEY
-  - title: |
-      Amazon AWS Secret Access Key
+    is_expand: true
+    is_required: true
+  - 
+    title: "Amazon AWS Secret Access Key"
     mapped_to: S3_DEPLOY_AWS_SECRET_KEY
-  - title: |
-      Amazon S3 Bucket Name
+    is_expand: true
+    is_required: true
+  -
+    title: "Amazon S3 Bucket Name"
     mapped_to: S3_BUCKET_NAME
-  - title: |
-      Amazon S3 File Path In Bucket (optional, default = bitrise_{app_slug}/{timestamp}_build_{build_slug})
+    is_expand: true
+    is_required: true
+  -
+    title: Amazon S3 File Path In Bucket
+    description: |
+      optional, default is: bitrise_{app_slug}/{timestamp}_build_{build_slug}
     mapped_to: S3_PATH_IN_BUCKET
-  - title: |
-      Amazon S3 file access level (optional, default=public_read) possible values:
-        * private
-        * public_read
+    is_expand: true
+    is_required: false
+  -
+    title: "Amazon S3 file access level"
     mapped_to: S3_FILE_ACCESS_LEVEL
-
+    value_options:
+      - "private"
+      - "public_read"
+    value: "public_read"
+    is_expand: false
+    is_required: true
 outputs:
-  - title: |
-      Amazon S3 Deploy IPA URL
+  - 
+    title: "Amazon S3 Deploy IPA URL"
     mapped_to: S3_DEPLOY_STEP_URL_IPA
-  - title: |
-      Amazon S3 Deploy DSYM URL
+  - 
+    title: "Amazon S3 Deploy DSYM URL"
     mapped_to: S3_DEPLOY_STEP_URL_DSYM
-  - title: |
-      Amazon S3 Deploy .plist URL
+  - 
+    title: "Amazon S3 Deploy .plist URL"
     mapped_to: S3_DEPLOY_STEP_URL_PLIST
-  - title: |
-      Amazon S3 Deploy result ("success" or "failed")
+  - 
+    title: "Amazon S3 Deploy result ('success' or 'failed')"
     mapped_to: S3_DEPLOY_STEP_STATUS
-  - title: |
-      Amazon S3 Deploy .plist URL, in a link-ready format (itms-services://?action=download-manifest&url=...)
+  - 
+    title: "Amazon S3 Deploy .plist URL, in a link-ready format (itms-services://?action=download-manifest&url=...)"
     mapped_to: S3_DEPLOY_STEP_EMAIL_READY_URL
