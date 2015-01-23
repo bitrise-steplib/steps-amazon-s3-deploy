@@ -153,6 +153,9 @@ begin
 
 	puts_section_to_formatted_output("## Success")
 	#
+	puts_section_to_formatted_output("### File Access Level")
+	puts_section_to_formatted_output("Specified File Access Level: **#{options[:acl]}**")
+	#
 	puts_section_to_formatted_output("### IPA")
 	puts_section_to_formatted_output("[link](#{public_url_ipa})")
 	puts_section_to_formatted_output("Raw:")
