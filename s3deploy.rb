@@ -177,7 +177,7 @@ begin
 		puts_section_to_formatted_output %Q{DSYM file not found.
 			To generate debug symbols (dSYM) go to your
 			Xcode Project's Settings - `Build Settings - Debug Information Format`
-			and set it to *DWARF with dSYM File*.}
+			and set it to **DWARF with dSYM File**.}
 	end
 	#
 	puts_section_to_formatted_output("### Plist")
