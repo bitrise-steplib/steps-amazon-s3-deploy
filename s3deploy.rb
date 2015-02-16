@@ -110,7 +110,7 @@ begin
 	end
 
 	# ipa upload
-	puts_section_to_formatted_output "## Uploading IPA"
+	puts_section_to_formatted_output "-> Uploading IPA"
 	ipa_path_in_bucket = "#{base_path_in_bucket}/#{File.basename(options[:ipa])}"
 	ipa_full_s3_path = s3_object_uri_for_bucket_and_path(options[:bucket_name], ipa_path_in_bucket)
 	public_url_ipa = public_url_for_bucket_and_path(options[:bucket_name], ipa_path_in_bucket)
@@ -118,11 +118,10 @@ begin
 	raise "Failed to upload IPA" unless do_s3cmd(%Q{put "#{options[:ipa]}" "#{ipa_full_s3_path}"})
 	raise "Failed to set IPA ACL" unless do_s3cmd(%Q{setacl "#{ipa_full_s3_path}" #{acl_arg}})
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_IPA=\"#{public_url_ipa}\"\n") }
-	puts_section_to_formatted_output "* IPA uploaded: `#{public_url_ipa}`"
 
 	# dsym upload
 	if options[:dsym]
-		puts_section_to_formatted_output "## Uploading dSYM"
+		puts_section_to_formatted_output "-> Uploading dSYM"
 		dsym_path_in_bucket = "#{base_path_in_bucket}/#{File.basename(options[:dsym])}"
 		dsym_full_s3_path = s3_object_uri_for_bucket_and_path(options[:bucket_name], dsym_path_in_bucket)
 		public_url_dsym = public_url_for_bucket_and_path(options[:bucket_name], dsym_path_in_bucket)
@@ -131,7 +130,6 @@ begin
 		raise "Failed to set dSYM ACL" unless do_s3cmd(%Q{setacl "#{dsym_full_s3_path}" #{acl_arg}})
 
 		File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_DSYM=\"#{public_url_dsym}\"\n") }
-		puts_section_to_formatted_output "* dSYM uploaded: `#{public_url_dsym}`"
 	end
 
 	ENV['S3_DEPLOY_STEP_URL_IPA'] = "#{public_url_ipa}"
