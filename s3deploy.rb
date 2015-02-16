@@ -118,6 +118,7 @@ begin
 	raise "Failed to upload IPA" unless do_s3cmd(%Q{put "#{options[:ipa]}" "#{ipa_full_s3_path}"})
 	raise "Failed to set IPA ACL" unless do_s3cmd(%Q{setacl "#{ipa_full_s3_path}" #{acl_arg}})
 	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_IPA=\"#{public_url_ipa}\"\n") }
+	puts_section_to_formatted_output "IPA upload success"
 
 	# dsym upload
 	if options[:dsym]
@@ -130,6 +131,7 @@ begin
 		raise "Failed to set dSYM ACL" unless do_s3cmd(%Q{setacl "#{dsym_full_s3_path}" #{acl_arg}})
 
 		File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_DSYM=\"#{public_url_dsym}\"\n") }
+		puts_section_to_formatted_output "dSYM upload success"
 	end
 
 	ENV['S3_DEPLOY_STEP_URL_IPA'] = "#{public_url_ipa}"
@@ -141,6 +143,7 @@ begin
 	plist_local_path = "Info.plist"
 
 	if File.exists?(plist_local_path)
+		puts_section_to_formatted_output "-> Uploading Info.plist"
 		plist_path_in_bucket = "#{base_path_in_bucket}/Info.plist"
 		plist_full_s3_path="s3://#{options[:bucket_name]}/#{plist_path_in_bucket}"
 		public_url_plist = public_url_for_bucket_and_path(options[:bucket_name], plist_path_in_bucket)
@@ -148,6 +151,7 @@ begin
 		raise "Failed to upload IPA" unless do_s3cmd(%Q{put "#{plist_local_path}" "#{plist_full_s3_path}"})
 		raise "Failed to set Plist ACL" unless do_s3cmd(%Q{setacl "#{plist_full_s3_path}" #{acl_arg}})
 		raise "Failed to remove Plist" unless system(%Q{rm "#{plist_local_path}"})
+		puts_section_to_formatted_output "Info.plist upload success"
 	else
 		puts "NO PLIST :<"
 	end
