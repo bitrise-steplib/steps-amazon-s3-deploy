@@ -21,6 +21,10 @@ See the **step.yml** description file
 
 See the **step.yml** description file
 
+# Note
+
+Uses the s3cmd utility, installed through [homebrew](http://brew.sh/).
+
 
 # How to test?
 

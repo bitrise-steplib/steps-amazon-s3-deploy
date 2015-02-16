@@ -21,16 +21,16 @@ type_tags:
 is_requires_admin_user: true
 inputs:
   -
-    title: "BITRISE Archive Step's IPA path output (passed automatically on Bitrise)"
+    title: "IPA path"
     mapped_to: BITRISE_IPA_PATH
     is_expand: true
     is_required: true
     value: "$BITRISE_IPA_PATH"
   -
-    title: "BITRISE Archive Step's DSYM output (passed automatically on Bitrise)"
+    title: "DSYM path (optional)"
     mapped_to: BITRISE_DSYM_PATH
     is_expand: true
-    is_required: true
+    is_required: false
     value: "$BITRISE_DSYM_PATH"
   -
     title: "BITRISE's App-Slug variable (passed automatically on Bitrise)"
@@ -60,9 +60,11 @@ inputs:
     is_expand: true
     is_required: true
   -
-    title: Amazon S3 File Path In Bucket
+    title: "Amazon S3 File Path In Bucket"
     description: |
-      optional, default is: bitrise_{app_slug}/{timestamp}_build_{build_slug}
+      Optional, if no value specified then the default will be:
+
+          bitrise_{app_slug}/{timestamp}_build_{build_slug}
     mapped_to: S3_PATH_IN_BUCKET
     is_expand: true
     is_required: false
@@ -89,5 +91,9 @@ outputs:
     title: "Amazon S3 Deploy result ('success' or 'failed')"
     mapped_to: S3_DEPLOY_STEP_STATUS
   - 
-    title: "Amazon S3 Deploy .plist URL, in a link-ready format (itms-services://?action=download-manifest&url=...)"
+    title: "Amazon S3 Deploy .plist URL"
+    description: |
+      In a link-ready format, example:
+
+          itms-services://?action=download-manifest&url=...
     mapped_to: S3_DEPLOY_STEP_EMAIL_READY_URL

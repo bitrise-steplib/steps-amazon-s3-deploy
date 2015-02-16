@@ -2,12 +2,12 @@
 
 options = {
 	ipa: ENV['BITRISE_IPA_PATH'],
-	dsym:	ENV['BITRISE_DSYM_PATH'],
+	dsym: ENV['BITRISE_DSYM_PATH'],
 	app_slug: ENV['BITRISE_APP_SLUG'],
 	build_slug: ENV['BITRISE_BUILD_SLUG'],
-	access_key:	ENV['S3_DEPLOY_AWS_ACCESS_KEY'],
-	secret_key:	ENV['S3_DEPLOY_AWS_SECRET_KEY'],
-	bucket_name:	ENV['S3_BUCKET_NAME'],
+	access_key: ENV['S3_DEPLOY_AWS_ACCESS_KEY'],
+	secret_key: ENV['S3_DEPLOY_AWS_SECRET_KEY'],
+	bucket_name: ENV['S3_BUCKET_NAME'],
 	path_in_bucket: ENV['S3_PATH_IN_BUCKET'],
 	acl: ENV['S3_FILE_ACCESS_LEVEL']
 }
@@ -63,7 +63,10 @@ begin
 	# ipa
 	raise "No IPA found to deploy. Terminating." unless File.exists?(options[:ipa])
 	# dsym
-	raise "No dSYM found to deploy. Terminating." unless File.exists?(options[:dsym])
+	unless File.exists?(options[:dsym])
+		options[:dsym] = nil
+		puts_section_to_formatted_output "DSYM file not found. To generate debug symbols (dSYM) go to your Xcode Project's Settings - Build Settings - Debug Information Format and set it to DWARF with dSYM File."
+	end
 	# access_key
 	raise "No AWS access key provided. Terminating." unless options[:access_key]
 	# secret_key
@@ -107,25 +110,29 @@ begin
 	end
 
 	# ipa upload
+	puts_section_to_formatted_output "-> Uploading IPA"
 	ipa_path_in_bucket = "#{base_path_in_bucket}/#{File.basename(options[:ipa])}"
 	ipa_full_s3_path = s3_object_uri_for_bucket_and_path(options[:bucket_name], ipa_path_in_bucket)
 	public_url_ipa = public_url_for_bucket_and_path(options[:bucket_name], ipa_path_in_bucket)
 	#
 	raise "Failed to upload IPA" unless do_s3cmd(%Q{put "#{options[:ipa]}" "#{ipa_full_s3_path}"})
 	raise "Failed to set IPA ACL" unless do_s3cmd(%Q{setacl "#{ipa_full_s3_path}" #{acl_arg}})
+	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_IPA=\"#{public_url_ipa}\"\n") }
+	puts_section_to_formatted_output "IPA upload success"
 
 	# dsym upload
-	dsym_path_in_bucket = "#{base_path_in_bucket}/#{File.basename(options[:dsym])}"
-	dsym_full_s3_path = s3_object_uri_for_bucket_and_path(options[:bucket_name], dsym_path_in_bucket)
-	public_url_dsym = public_url_for_bucket_and_path(options[:bucket_name], dsym_path_in_bucket)
-	#
-	raise "Failed to upload dSYM" unless do_s3cmd(%Q{put "#{options[:dsym]}" "#{dsym_full_s3_path}"})
-	raise "Failed to set dSYM ACL" unless do_s3cmd(%Q{setacl "#{dsym_full_s3_path}" #{acl_arg}})
+	if options[:dsym]
+		puts_section_to_formatted_output "-> Uploading dSYM"
+		dsym_path_in_bucket = "#{base_path_in_bucket}/#{File.basename(options[:dsym])}"
+		dsym_full_s3_path = s3_object_uri_for_bucket_and_path(options[:bucket_name], dsym_path_in_bucket)
+		public_url_dsym = public_url_for_bucket_and_path(options[:bucket_name], dsym_path_in_bucket)
+		#
+		raise "Failed to upload dSYM" unless do_s3cmd(%Q{put "#{options[:dsym]}" "#{dsym_full_s3_path}"})
+		raise "Failed to set dSYM ACL" unless do_s3cmd(%Q{setacl "#{dsym_full_s3_path}" #{acl_arg}})
 
-	
-	# output variables
-	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_IPA=\"#{public_url_ipa}\"\n") }
-	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_DSYM=\"#{public_url_dsym}\"\n") }
+		File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_DSYM=\"#{public_url_dsym}\"\n") }
+		puts_section_to_formatted_output "dSYM upload success"
+	end
 
 	ENV['S3_DEPLOY_STEP_URL_IPA'] = "#{public_url_ipa}"
 
@@ -136,6 +143,7 @@ begin
 	plist_local_path = "Info.plist"
 
 	if File.exists?(plist_local_path)
+		puts_section_to_formatted_output "-> Uploading Info.plist"
 		plist_path_in_bucket = "#{base_path_in_bucket}/Info.plist"
 		plist_full_s3_path="s3://#{options[:bucket_name]}/#{plist_path_in_bucket}"
 		public_url_plist = public_url_for_bucket_and_path(options[:bucket_name], plist_path_in_bucket)
@@ -143,6 +151,7 @@ begin
 		raise "Failed to upload IPA" unless do_s3cmd(%Q{put "#{plist_local_path}" "#{plist_full_s3_path}"})
 		raise "Failed to set Plist ACL" unless do_s3cmd(%Q{setacl "#{plist_full_s3_path}" #{acl_arg}})
 		raise "Failed to remove Plist" unless system(%Q{rm "#{plist_local_path}"})
+		puts_section_to_formatted_output "Info.plist upload success"
 	else
 		puts "NO PLIST :<"
 	end
@@ -153,15 +162,25 @@ begin
 
 	puts_section_to_formatted_output("## Success")
 	#
+	puts_section_to_formatted_output("### File Access Level")
+	puts_section_to_formatted_output("Specified File Access Level: **#{options[:acl]}**")
+	#
 	puts_section_to_formatted_output("### IPA")
 	puts_section_to_formatted_output("[link](#{public_url_ipa})")
 	puts_section_to_formatted_output("Raw:")
 	puts_section_to_formatted_output("    #{public_url_ipa}")
 	#
 	puts_section_to_formatted_output("### DSYM")
-	puts_section_to_formatted_output("[link](#{public_url_dsym})")
-	puts_section_to_formatted_output("Raw:")
-	puts_section_to_formatted_output("    #{public_url_dsym}")
+	if options[:dsym]
+		puts_section_to_formatted_output("[link](#{public_url_dsym})")
+		puts_section_to_formatted_output("Raw:")
+		puts_section_to_formatted_output("    #{public_url_dsym}")
+	else
+		puts_section_to_formatted_output %Q{DSYM file not found.
+			To generate debug symbols (dSYM) go to your
+			Xcode Project's Settings - `Build Settings - Debug Information Format`
+			and set it to **DWARF with dSYM File**.}
+	end
 	#
 	puts_section_to_formatted_output("### Plist")
 	puts_section_to_formatted_output("[link](#{public_url_plist})")
