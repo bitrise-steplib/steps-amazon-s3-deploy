@@ -50,6 +50,14 @@ def public_url_for_bucket_and_path(bucket_name, path_in_bucket)
 	return "https://#{bucket_name}.s3.amazonaws.com/#{path_in_bucket}"
 end
 
+def export_output(out_key, out_value)
+	IO.popen("envman add --key #{out_key.to_s}", 'r+') {|f|
+		f.write(out_value.to_s)
+		f.close_write
+		f.read
+	}
+end
+
 
 $s3cmd_config_path = "s3cfg.config"
 def do_s3cmd(command_str)
@@ -72,16 +80,6 @@ begin
 	# secret_key
 	raise "No AWS secret key provided. Terminating." unless options[:secret_key]
 
-	# Install s3cmd
-	puts " (i) Checking s3cmd"
-	if system("s3cmd --version")
-		puts " (i) s3cmd already installed"
-	else
-		puts " (i) installing s3cmd"
-		raise "Failed to install s3cmd" unless system("brew install s3cmd")
-		raise "Failed to get s3cmd version after install" unless system("s3cmd --version")
-	end
-	
 	# AWS configs
 	raise "Failed to set access keys" unless system(%Q{printf %"s\n" '[default]' "access_key = #{options[:access_key]}" "secret_key = #{options[:secret_key]}" > #{$s3cmd_config_path}})
 
@@ -117,7 +115,7 @@ begin
 	#
 	raise "Failed to upload IPA" unless do_s3cmd(%Q{put "#{options[:ipa]}" "#{ipa_full_s3_path}"})
 	raise "Failed to set IPA ACL" unless do_s3cmd(%Q{setacl "#{ipa_full_s3_path}" #{acl_arg}})
-	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_IPA=\"#{public_url_ipa}\"\n") }
+	export_output('S3_DEPLOY_STEP_URL_IPA', public_url_ipa)
 	puts_section_to_formatted_output "IPA upload success"
 
 	# dsym upload
@@ -130,7 +128,7 @@ begin
 		raise "Failed to upload dSYM" unless do_s3cmd(%Q{put "#{options[:dsym]}" "#{dsym_full_s3_path}"})
 		raise "Failed to set dSYM ACL" unless do_s3cmd(%Q{setacl "#{dsym_full_s3_path}" #{acl_arg}})
 
-		File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_DSYM=\"#{public_url_dsym}\"\n") }
+		export_output('S3_DEPLOY_STEP_URL_DSYM', public_url_dsym)
 		puts_section_to_formatted_output "dSYM upload success"
 	end
 
@@ -156,9 +154,9 @@ begin
 		puts "NO PLIST :<"
 	end
 
-	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_URL_PLIST=\"#{public_url_plist}\"\n") }
+	export_output('S3_DEPLOY_STEP_URL_PLIST', public_url_plist)
 	email_ready_link_url = "itms-services://?action=download-manifest&url=#{public_url_plist}"
-	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_EMAIL_READY_URL=\"#{email_ready_link_url}\"\n") }
+	export_output('S3_DEPLOY_STEP_EMAIL_READY_URL', email_ready_link_url)
 
 	puts_section_to_formatted_output("## Success")
 	#
@@ -168,13 +166,13 @@ begin
 	puts_section_to_formatted_output("### IPA")
 	puts_section_to_formatted_output("[link](#{public_url_ipa})")
 	puts_section_to_formatted_output("Raw:")
-	puts_section_to_formatted_output("    #{public_url_ipa}")
+	puts_section_to_formatted_output("		#{public_url_ipa}")
 	#
 	puts_section_to_formatted_output("### DSYM")
 	if options[:dsym]
 		puts_section_to_formatted_output("[link](#{public_url_dsym})")
 		puts_section_to_formatted_output("Raw:")
-		puts_section_to_formatted_output("    #{public_url_dsym}")
+		puts_section_to_formatted_output("		#{public_url_dsym}")
 	else
 		puts_section_to_formatted_output %Q{DSYM file not found.
 			To generate debug symbols (dSYM) go to your
@@ -185,20 +183,20 @@ begin
 	puts_section_to_formatted_output("### Plist")
 	puts_section_to_formatted_output("[link](#{public_url_plist})")
 	puts_section_to_formatted_output("Raw:")
-	puts_section_to_formatted_output("    #{public_url_plist}")
+	puts_section_to_formatted_output("		#{public_url_plist}")
 	#
 	puts_section_to_formatted_output("### Install link")
 	puts_section_to_formatted_output("**open this link on an iOS device to install the app**")
 	puts_section_to_formatted_output(%Q{<a href="#{email_ready_link_url}" target="_blank">link</a>})
 	puts_section_to_formatted_output("Raw:")
-	puts_section_to_formatted_output("    #{email_ready_link_url}")
+	puts_section_to_formatted_output("		#{email_ready_link_url}")
 
 rescue => ex
 	status = "failed"
 	cleanup_before_error_exit("#{ex}")
 	exit 1
 ensure
-	File.open(File.join(ENV['HOME'], '.bash_profile'), 'a') { |f| f.write("export S3_DEPLOY_STEP_STATUS=\"#{status}\"\n") }
+	export_output('S3_DEPLOY_STEP_STATUS', status)
 	puts "status=" + status
 	system("rm #{$s3cmd_config_path}")
 end

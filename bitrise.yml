@@ -17,9 +17,18 @@ workflows:
   test:
     steps:
     - path::./:
-      inputs:
+        inputs:
         - ipa_path: "$BITRISE_IPA_PATH"
         - dsym_path: "$BITRISE_DSYM_PATH"
         - app_slug: "$BITRISE_APP_SLUG"
         - build_slug: "$BITRISE_BUILD_SLUG"
         - file_access_level: "public_read"
+    - script:
+        inputs:
+        - content: |-
+            #!/bin/bash
+            echo "S3_DEPLOY_STEP_URL_IPA: ${S3_DEPLOY_STEP_URL_IPA}"
+            echo "S3_DEPLOY_STEP_URL_DSYM: ${S3_DEPLOY_STEP_URL_DSYM}"
+            echo "S3_DEPLOY_STEP_URL_PLIST: ${S3_DEPLOY_STEP_URL_PLIST}"
+            echo "S3_DEPLOY_STEP_STATUS: ${S3_DEPLOY_STEP_STATUS}"
+            echo "S3_DEPLOY_STEP_EMAIL_READY_URL: ${S3_DEPLOY_STEP_EMAIL_READY_URL}"
