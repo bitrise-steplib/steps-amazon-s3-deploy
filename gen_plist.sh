@@ -1,9 +1,9 @@
 #!/bin/bash
 # Generates an xml structured plist with the minimum required entries from inner info.plist in ipa
 
-unzip "$BITRISE_IPA_PATH" > /dev/null
+unzip "$ipa_path" > /dev/null
 
-BASE_NAME=${BITRISE_IPA_PATH##*/}
+BASE_NAME=${ipa_path##*/}
 APP_NAME=${BASE_NAME%.*}
 
 BUNDLEID=`/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" ./Payload/"$APP_NAME".app/Info.plist`

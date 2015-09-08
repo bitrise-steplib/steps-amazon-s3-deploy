@@ -1,15 +1,15 @@
 #
 
 options = {
-	ipa: ENV['BITRISE_IPA_PATH'],
-	dsym: ENV['BITRISE_DSYM_PATH'],
-	app_slug: ENV['BITRISE_APP_SLUG'],
-	build_slug: ENV['BITRISE_BUILD_SLUG'],
-	access_key: ENV['S3_DEPLOY_AWS_ACCESS_KEY'],
-	secret_key: ENV['S3_DEPLOY_AWS_SECRET_KEY'],
-	bucket_name: ENV['S3_BUCKET_NAME'],
-	path_in_bucket: ENV['S3_PATH_IN_BUCKET'],
-	acl: ENV['S3_FILE_ACCESS_LEVEL']
+	ipa: ENV['ipa_path'],
+	dsym: ENV['dsym_path'],
+	app_slug: ENV['app_slug'],
+	build_slug: ENV['build_slug'],
+	access_key: ENV['aws_access_key'],
+	secret_key: ENV['aws_secret_key'],
+	bucket_name: ENV['bucket_name'],
+	path_in_bucket: ENV['path_in_bucket'],
+	acl: ENV['file_access_level']
 }
 
 p "Options: #{options}"

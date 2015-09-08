@@ -84,10 +84,10 @@ function is_not_empty {
 }
 
 function test_env_cleanup {
-  unset S3_DEPLOY_AWS_ACCESS_KEY
-	unset S3_DEPLOY_AWS_SECRET_KEY
-	unset S3_BUCKET_NAME
-  unset BITRISE_IPA_PATH
+  unset aws_access_key
+	unset aws_secret_key
+	unset bucket_name
+  unset ipa_path
 }
 
 function print_new_test {
@@ -109,7 +109,7 @@ test_ipa_path="tests/testfile.ipa"
 test_results_success_count=0
 test_results_error_count=0
 
-# [TEST] Call the command with S3_DEPLOY_AWS_ACCESS_KEY not set, 
+# [TEST] Call the command with aws_access_key not set, 
 # it should raise an error message and exit
 # 
 (
@@ -117,13 +117,13 @@ test_results_error_count=0
   test_env_cleanup
 
   # Set env vars
-  export S3_DEPLOY_AWS_SECRET_KEY="dsa4321"
-  export S3_BUCKET_NAME="dsa4321"
-  export BITRISE_IPA_PATH="$test_ipa_path"
+  export aws_secret_key="dsa4321"
+  export bucket_name="dsa4321"
+  export ipa_path="$test_ipa_path"
 
-  expect_success "S3_DEPLOY_AWS_SECRET_KEY environment variable should be set" is_not_empty "$S3_DEPLOY_AWS_SECRET_KEY"
-  expect_success "S3_BUCKET_NAME environment variable should be set" is_not_empty "$S3_BUCKET_NAME"
-  expect_success "BITRISE_IPA_PATH environment variable should be set" is_not_empty "$BITRISE_IPA_PATH"
+  expect_success "aws_secret_key environment variable should be set" is_not_empty "$aws_secret_key"
+  expect_success "bucket_name environment variable should be set" is_not_empty "$bucket_name"
+  expect_success "ipa_path environment variable should be set" is_not_empty "$ipa_path"
 
   # Send sms request
   expect_error "The command should be called, but should not complete sucessfully" run_target_command
