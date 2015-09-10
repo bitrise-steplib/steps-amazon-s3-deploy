@@ -9,5 +9,5 @@ if [ $? -ne 0 ] ; then
 	exit 1
 fi
 
-ruby ./s3deploy.rb
+ruby "${THIS_SCRIPT_DIR}/s3deploy.rb"
 exit $?
