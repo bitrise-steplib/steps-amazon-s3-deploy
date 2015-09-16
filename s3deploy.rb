@@ -58,8 +58,8 @@ def export_output(out_key, out_value)
 	}
 end
 
-
-$s3cmd_config_path = "s3cfg.config"
+$this_script_path = File.expand_path(File.dirname(__FILE__))
+$s3cmd_config_path = "./s3cfg.config"
 def do_s3cmd(command_str)
 	return system(%Q{s3cmd -c "#{$s3cmd_config_path}" #{command_str}})
 end
@@ -135,7 +135,7 @@ begin
 	ENV['S3_DEPLOY_STEP_URL_IPA'] = "#{public_url_ipa}"
 
 	# plist generation - we have to run it after we have obtained the public url to the ipa
-	system("sh ./gen_plist.sh")
+	system("sh #{$this_script_path}/gen_plist.sh")
 
 	# plist upload
 	plist_local_path = "Info.plist"
