@@ -22,7 +22,7 @@ is_always_run: false
 is_skippable: false
 dependencies:
   - manager: brew
-    name: s3cmd
+    name: awscli
 run_if: ""
 inputs:
   - ipa_path: "$BITRISE_IPA_PATH"

@@ -59,9 +59,9 @@ def export_output(out_key, out_value)
 end
 
 $this_script_path = File.expand_path(File.dirname(__FILE__))
-$s3cmd_config_path = "./s3cfg.config"
-def do_s3cmd(command_str)
-	return system(%Q{s3cmd -c "#{$s3cmd_config_path}" #{command_str}})
+
+def do_s3upload(sourcepth, full_destpth, aclstr)
+	return system(%Q{aws s3 cp "#{sourcepth}" "#{full_destpth}" --acl "#{aclstr}"})
 end
 
 status = "success"
@@ -81,7 +81,8 @@ begin
 	raise "No AWS secret key provided. Terminating." unless options[:secret_key]
 
 	# AWS configs
-	raise "Failed to set access keys" unless system(%Q{printf %"s\n" '[default]' "access_key = #{options[:access_key]}" "secret_key = #{options[:secret_key]}" > #{$s3cmd_config_path}})
+	ENV['AWS_ACCESS_KEY_ID'] = options[:access_key]
+	ENV['AWS_SECRET_ACCESS_KEY'] = options[:secret_key]
 
 	# define object path
 	base_path_in_bucket = ""
@@ -95,13 +96,13 @@ begin
 	puts " (i) Base path in Bucket: #{base_path_in_bucket}"
 
 	# supported: private, public_read
-	acl_arg = '--acl-public'
+	acl_arg = 'public-read'
 	if (options[:acl])
 		case options[:acl]
 		when 'public_read'
-			acl_arg = '--acl-public'
+			acl_arg = 'public-read'
 		when 'private'
-			acl_arg = '--acl-private'
+			acl_arg = 'private'
 		else
 			raise "Invalid ACL option: #{options[:acl]}"
 		end
@@ -113,8 +114,7 @@ begin
 	ipa_full_s3_path = s3_object_uri_for_bucket_and_path(options[:bucket_name], ipa_path_in_bucket)
 	public_url_ipa = public_url_for_bucket_and_path(options[:bucket_name], ipa_path_in_bucket)
 	#
-	raise "Failed to upload IPA" unless do_s3cmd(%Q{put "#{options[:ipa]}" "#{ipa_full_s3_path}"})
-	raise "Failed to set IPA ACL" unless do_s3cmd(%Q{setacl "#{ipa_full_s3_path}" #{acl_arg}})
+	raise "Failed to upload IPA" unless do_s3upload(options[:ipa], ipa_full_s3_path, acl_arg)
 	export_output('S3_DEPLOY_STEP_URL_IPA', public_url_ipa)
 	puts_section_to_formatted_output "IPA upload success"
 
@@ -125,8 +125,7 @@ begin
 		dsym_full_s3_path = s3_object_uri_for_bucket_and_path(options[:bucket_name], dsym_path_in_bucket)
 		public_url_dsym = public_url_for_bucket_and_path(options[:bucket_name], dsym_path_in_bucket)
 		#
-		raise "Failed to upload dSYM" unless do_s3cmd(%Q{put "#{options[:dsym]}" "#{dsym_full_s3_path}"})
-		raise "Failed to set dSYM ACL" unless do_s3cmd(%Q{setacl "#{dsym_full_s3_path}" #{acl_arg}})
+		raise "Failed to upload dSYM" unless do_s3upload(options[:dsym], dsym_full_s3_path, acl_arg)
 
 		export_output('S3_DEPLOY_STEP_URL_DSYM', public_url_dsym)
 		puts_section_to_formatted_output "dSYM upload success"
@@ -146,8 +145,7 @@ begin
 		plist_full_s3_path="s3://#{options[:bucket_name]}/#{plist_path_in_bucket}"
 		public_url_plist = public_url_for_bucket_and_path(options[:bucket_name], plist_path_in_bucket)
 		#
-		raise "Failed to upload IPA" unless do_s3cmd(%Q{put "#{plist_local_path}" "#{plist_full_s3_path}"})
-		raise "Failed to set Plist ACL" unless do_s3cmd(%Q{setacl "#{plist_full_s3_path}" #{acl_arg}})
+		raise "Failed to upload IPA" unless do_s3upload(plist_local_path, plist_full_s3_path, acl_arg)
 		raise "Failed to remove Plist" unless system(%Q{rm "#{plist_local_path}"})
 		puts_section_to_formatted_output "Info.plist upload success"
 	else
@@ -198,5 +196,4 @@ rescue => ex
 ensure
 	export_output('S3_DEPLOY_STEP_STATUS', status)
 	puts "status=" + status
-	system("rm #{$s3cmd_config_path}")
 end
