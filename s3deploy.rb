@@ -14,21 +14,14 @@ options = {
 
 p "Options: #{options}"
 
-
-$formatted_output_file_path = ENV['BITRISE_STEP_FORMATTED_OUTPUT_FILE_PATH']
-
 def puts_string_to_formatted_output(text)
-	open($formatted_output_file_path, 'a') { |f|
-		f.puts(text)
-	}
+	puts(text)
 end
 
 def puts_section_to_formatted_output(section_text)
-	open($formatted_output_file_path, 'a') { |f|
-		f.puts
-		f.puts(section_text)
-		f.puts
-	}
+	puts
+	puts(section_text)
+	puts
 end
 
 puts_section_to_formatted_output('# Amazon S3 Deploy')
