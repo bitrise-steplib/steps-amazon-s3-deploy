@@ -1,23 +1,27 @@
-format_version: 1.0.0
+format_version: 1.1.0
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 
 app:
   envs:
   # define these in your .bitrise.secrets.yml
-  - BITRISE_IPA_PATH:
-  - BITRISE_DSYM_PATH:
-  - BITRISE_APP_SLUG:
-  - BITRISE_BUILD_SLUG:
-  - aws_access_key:
-  - aws_secret_key:
-  - bucket_name:
-  - path_in_bucket:
+  - BITRISE_IPA_PATH: $BITRISE_IPA_PATH
+  - BITRISE_DSYM_PATH: $BITRISE_DSYM_PATH
+  - BITRISE_APP_SLUG: $BITRISE_APP_SLUG
+  - BITRISE_BUILD_SLUG: $BITRISE_BUILD_SLUG
+  - aws_access_key: $aws_access_key
+  - aws_secret_key: $aws_secret_key
+  - bucket_name: $bucket_name
+  - path_in_bucket: $path_in_bucket
 
 workflows:
   test:
     steps:
     - path::./:
         inputs:
+        - aws_access_key: $aws_access_key
+        - aws_secret_key: $aws_secret_key
+        - bucket_name: $bucket_name
+        - path_in_bucket: $path_in_bucket
         - ipa_path: "$BITRISE_IPA_PATH"
         - dsym_path: "$BITRISE_DSYM_PATH"
         - app_slug: "$BITRISE_APP_SLUG"
