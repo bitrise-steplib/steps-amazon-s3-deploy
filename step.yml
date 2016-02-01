@@ -30,57 +30,43 @@ inputs:
       title: "IPA path"
       summary: ""
       description: ""
-      is_expand: true
       is_required: true
-      is_dont_change_value: false
   - dsym_path: "$BITRISE_DSYM_PATH"
     opts:
       title: "DSYM path (optional)"
       summary: ""
       description: ""
-      is_expand: true
       is_required: false
-      is_dont_change_value: false
   - app_slug: "$BITRISE_APP_SLUG"
     opts:
       title: "BITRISE's App-Slug variable (passed automatically on Bitrise)"
       summary: ""
       description: ""
-      is_expand: true
       is_required: true
-      is_dont_change_value: false
   - build_slug: "$BITRISE_BUILD_SLUG"
     opts:
       title: "BITRISE's Build-Slug variable (passed automatically on Bitrise)"
       summary: ""
       description: ""
-      is_expand: true
       is_required: true
-      is_dont_change_value: false
   - aws_access_key: ""
     opts:
       title: "Amazon AWS Access Key"
       summary: ""
       description: ""
-      is_expand: true
       is_required: true
-      is_dont_change_value: false
   - aws_secret_key: ""
     opts:
       title: "Amazon AWS Secret Access Key"
       summary: ""
       description: ""
-      is_expand: true
       is_required: true
-      is_dont_change_value: false
   - bucket_name: ""
     opts:
       title: "Amazon S3 Bucket Name"
       summary: ""
       description: ""
-      is_expand: true
       is_required: true
-      is_dont_change_value: false
   - bucket_region: ""
     opts:
       title: "Amazon S3 Bucket Region"
@@ -90,10 +76,6 @@ inputs:
 
         If you use default s3 region (us-east-1), you can leave it empty,
         otherwise you should provide this input.
-      description: ""
-      is_expand: true
-      is_required: false
-      is_dont_change_value: false
   - path_in_bucket: ""
     opts:
       title: "Amazon S3 File Path In Bucket"
@@ -102,18 +84,13 @@ inputs:
         Optional, if no value specified then the default will be:
 
             bitrise_{app_slug}/{timestamp}_build_{build_slug}
-      is_expand: true
-      is_required: false
-      is_dont_change_value: false
   - file_access_level: "public_read"
     opts:
       title: "Amazon S3 file access level"
       value_options:
         - "private"
         - "public_read"
-      is_expand: false
       is_required: true
-      is_dont_change_value: false
 outputs:
   - S3_DEPLOY_STEP_URL_IPA: ""
     opts:
