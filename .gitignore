@@ -2,3 +2,5 @@
 vendor
 .bitrise*
 _tmp
+.idea/*
+iTunesMetadata.plist

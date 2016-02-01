@@ -81,6 +81,19 @@ inputs:
       is_expand: true
       is_required: true
       is_dont_change_value: false
+  - bucket_region: ""
+    opts:
+      title: "Amazon S3 Bucket Region"
+      summary: ""
+      description: |
+        Amazon S3 Bucket Region
+
+        If you use default s3 region (us-east-1), you can leave it empty,
+        otherwise you should provide this input.
+      description: ""
+      is_expand: true
+      is_required: false
+      is_dont_change_value: false
   - path_in_bucket: ""
     opts:
       title: "Amazon S3 File Path In Bucket"
