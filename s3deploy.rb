@@ -132,7 +132,8 @@ begin
   ENV['S3_DEPLOY_STEP_URL_IPA'] = "#{public_url_ipa}"
 
   # plist generation - we have to run it after we have obtained the public url to the ipa
-  system("sh #{$this_script_path}/gen_plist.sh")
+  success = system("sh #{$this_script_path}/gen_plist.sh")
+  raise 'Failed to generate info.plist' unless success
 
   # plist upload
   plist_local_path = "Info.plist"
