@@ -103,15 +103,20 @@ begin
     log_warn("DSYM file not found. To generate debug symbols (dSYM) go to your Xcode Project's Settings - Build Settings - Debug Information Format and set it to DWARF with dSYM File.")
   end
 
-  fail 'Missing required input: aws_access_key' if options[:access_key].to_s.eql?("")
-  fail 'No AWS secret key provided. Terminating.' if options[:secret_key].to_s.eql?("")
+  fail 'Missing required input: app_slug' if options[:app_slug].to_s.eql?('')
+  fail 'Missing required input: build_slug' if options[:build_slug].to_s.eql?('')
 
-  fail 'No AWS secret key provided. Terminating.' if options[:app_slug].to_s.eql?("")
+  fail 'Missing required input: aws_access_key' if options[:access_key].to_s.eql?('')
+  fail 'Missing required input: aws_secret_key' if options[:secret_key].to_s.eql?('')
+
+  fail 'Missing required input: bucket_name' if options[:bucket_name].to_s.eql?('')
+  fail 'Missing required input: file_access_level' if options[:acl].to_s.eql?('')
 
   #
   # AWS configs
   ENV['AWS_ACCESS_KEY_ID'] = options[:access_key]
   ENV['AWS_SECRET_ACCESS_KEY'] = options[:secret_key]
+  ENV['AWS_DEFAULT_REGION'] = options[:bucket_region] unless options[:bucket_region].to_s.eql?('')
 
   #
   # define object path

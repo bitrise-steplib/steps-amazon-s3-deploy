@@ -36,7 +36,6 @@ inputs:
       title: "DSYM path (optional)"
       summary: ""
       description: ""
-      is_required: false
   - app_slug: "$BITRISE_APP_SLUG"
     opts:
       title: "BITRISE's App-Slug variable (passed automatically on Bitrise)"
@@ -67,7 +66,7 @@ inputs:
       summary: ""
       description: ""
       is_required: true
-  - bucket_region: "us-east-1"
+  - bucket_region: ""
     opts:
       title: "Amazon S3 Bucket Region"
       summary: ""
