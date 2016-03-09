@@ -36,7 +36,6 @@ inputs:
       title: "DSYM path (optional)"
       summary: ""
       description: ""
-      is_required: false
   - app_slug: "$BITRISE_APP_SLUG"
     opts:
       title: "BITRISE's App-Slug variable (passed automatically on Bitrise)"
@@ -76,14 +75,14 @@ inputs:
 
         If you use default s3 region (us-east-1), you can leave it empty,
         otherwise you should provide this input.
-  - path_in_bucket: ""
+  - path_in_bucket: "bitrise_$BITRISE_APP_SLUG/${BITRISE_BUILD_TRIGGER_TIMESTAMP}_build_${BITRISE_BUILD_SLUG}"
     opts:
       title: "Amazon S3 File Path In Bucket"
       summary: ""
       description: |-
         Optional, if no value specified then the default will be:
 
-            bitrise_{app_slug}/{timestamp}_build_{build_slug}
+            bitrise_$BITRISE_APP_SLUG/${BITRISE_BUILD_TRIGGER_TIMESTAMP}_build_${BITRISE_BUILD_SLUG}
   - file_access_level: "public_read"
     opts:
       title: "Amazon S3 file access level"
