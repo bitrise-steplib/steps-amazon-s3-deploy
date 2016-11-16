@@ -217,7 +217,7 @@ begin
   if options[:dsym]
     log_details("* DSYM: #{public_url_dsym}")
   else
-    log_wan(%Q{DSYM file not found.
+    log_warn(%Q{DSYM file not found.
       To generate debug symbols (dSYM) go to your
       Xcode Project's Settings - `Build Settings - Debug Information Format`
       and set it to **DWARF with dSYM File**.})
