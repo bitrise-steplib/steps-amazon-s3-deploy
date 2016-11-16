@@ -1,6 +1,11 @@
-## Changelog (Current version: 3.5.0)
+## Changelog (Current version: 3.5.1)
 
 -----------------
+
+### 3.5.1 (2016 Nov 16)
+
+* [16cb47d] prepare for 3.5.1
+* [ac8cde1] Fix a typo when calling `log_warn` (#20)
 
 ### 3.5.0 (2016 Mar 09)
 
@@ -143,4 +148,4 @@
 
 -----------------
 
-Updated: 2016 Mar 09
+Updated: 2016 Nov 16
