@@ -1,6 +1,10 @@
-## Changelog (Current version: 3.5.2)
+## Changelog (Current version: 3.5.3)
 
 -----------------
+
+### 3.5.3 (2018 Apr 04)
+
+* [1d2527d] Prepare for 3.5.3
 
 ### 3.5.2 (2018 Apr 04)
 
