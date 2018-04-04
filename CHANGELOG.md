@@ -1,6 +1,13 @@
-## Changelog (Current version: 3.5.1)
+## Changelog (Current version: 3.5.2)
 
 -----------------
+
+### 3.5.2 (2018 Apr 04)
+
+* [d9f4321] Prepare for 3.5.2
+* [0c43bff] bundle-short-version info added to manifest.plist (#21)
+* [706427b] No need for `exit $?`
+* [2446e3c] git clone url fix
 
 ### 3.5.1 (2016 Nov 16)
 
@@ -148,4 +155,4 @@
 
 -----------------
 
-Updated: 2016 Nov 16
+Updated: 2018 Apr 04
