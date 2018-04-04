@@ -12,11 +12,8 @@ support_url: https://github.com/bitrise-io/steps-amazon-s3-deploy/issues
 host_os_tags:
   - osx-10.9
   - osx-10.10
-project_type_tags:
-  - ios
 type_tags:
   - deploy
-  - amazon
 is_requires_admin_user: true
 is_always_run: false
 is_skippable: false
