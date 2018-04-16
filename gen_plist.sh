@@ -28,7 +28,6 @@ APP_BASE_NAME=${last_find_app_path##*/}
 APP_NAME=${APP_BASE_NAME%.app}
 
 BUNDLEID=`/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" ./Payload/"$APP_BASE_NAME"/Info.plist`
-BUNDLEVER=`/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" ./Payload/"$APP_BASE_NAME"/Info.plist`
 BUNDLESHORTVER=`/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" ./Payload/"$APP_BASE_NAME"/Info.plist`
 
 generated_plist_path="./Info.plist"
@@ -57,8 +56,6 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 				<key>bundle-identifier</key>
 				<string>$BUNDLEID</string>
 				<key>bundle-version</key>
-				<string>$BUNDLEVER</string>
-				<key>bundle-short-version</key>
 				<string>$BUNDLESHORTVER</string>
 				<key>kind</key>
 				<string>software</string>
