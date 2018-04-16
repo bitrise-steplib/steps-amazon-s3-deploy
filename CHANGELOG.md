@@ -1,6 +1,11 @@
-## Changelog (Current version: 3.5.3)
+## Changelog (Current version: 3.5.4)
 
 -----------------
+
+### 3.5.4 (2018 Apr 16)
+
+* [4e794a1] Prepare for 3.5.4
+* [f8810be] Update gen_plist.sh (#22)
 
 ### 3.5.3 (2018 Apr 04)
 
@@ -159,4 +164,4 @@
 
 -----------------
 
-Updated: 2018 Apr 04
+Updated: 2018 Apr 16
