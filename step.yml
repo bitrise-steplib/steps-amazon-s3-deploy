@@ -7,9 +7,11 @@ description: |-
 website: https://github.com/bitrise-io/steps-amazon-s3-deploy
 source_code_url: https://github.com/bitrise-io/steps-amazon-s3-deploy
 support_url: https://github.com/bitrise-io/steps-amazon-s3-deploy/issues
-host_os_tags:
-  - osx-10.9
-  - osx-10.10
+project_type_tags:
+  - ios
+  - react-native
+  - xamarin
+  - cordova
 type_tags:
   - deploy
 is_requires_admin_user: true
@@ -37,24 +39,32 @@ inputs:
       summary: ""
       description: ""
       is_required: true
+      is_expand: true
+      is_sensitive: true
   - build_slug: "$BITRISE_BUILD_SLUG"
     opts:
       title: "BITRISE's Build-Slug variable (passed automatically on Bitrise)"
       summary: ""
       description: ""
       is_required: true
+      is_expand: true
+      is_sensitive: true
   - aws_access_key: ""
     opts:
       title: "Amazon AWS Access Key"
       summary: ""
       description: ""
       is_required: true
+      is_expand: true
+      is_sensitive: true
   - aws_secret_key: ""
     opts:
       title: "Amazon AWS Secret Access Key"
       summary: ""
       description: ""
       is_required: true
+      is_expand: true
+      is_sensitive: true
   - bucket_name: ""
     opts:
       title: "Amazon S3 Bucket Name"
