@@ -12,6 +12,7 @@ project_type_tags:
   - react-native
   - xamarin
   - cordova
+  - ionic
 type_tags:
   - deploy
 is_requires_admin_user: true
