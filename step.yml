@@ -41,7 +41,6 @@ inputs:
       description: ""
       is_required: true
       is_expand: true
-      is_sensitive: true
   - build_slug: "$BITRISE_BUILD_SLUG"
     opts:
       title: "BITRISE's Build-Slug variable (passed automatically on Bitrise)"
@@ -49,7 +48,6 @@ inputs:
       description: ""
       is_required: true
       is_expand: true
-      is_sensitive: true
   - aws_access_key: ""
     opts:
       title: "Amazon AWS Access Key"
