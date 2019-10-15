@@ -13,6 +13,7 @@ project_type_tags:
   - xamarin
   - cordova
   - ionic
+  - flutter
 type_tags:
   - deploy
 is_requires_admin_user: true
