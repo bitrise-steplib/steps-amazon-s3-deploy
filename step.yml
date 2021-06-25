@@ -1,9 +1,30 @@
-title: Deploy to Amazon S3
-summary: Upload your iOS Application to Amazon S3
+title: "Deploy to Amazon S3"
+summary: |-
+  Uploads your iOS application to Amazon S3.
 description: |-
-  This step deploys an Xcode archive to Amazon S3.
-  Requirements: An Xcode Archive Step must run before this step and you must have an Amazon S3 account. 
-  To register an Amazon S3 account, [click here](http://aws.amazon.com/s3/).
+  [This Step](https://github.com/bitrise-steplib/steps-amazon-s3-deploy) deploys an Xcode archive to [Amazon S3](https://aws.amazon.com/s3/).
+
+  ### Configuring the Step
+
+  Before you start:
+  - To deploy to S3 with this Step, you must have an Amazon S3 account with your credentials at hand. If you don't have one yet, go ahead and [create one](https://aws.amazon.com/s3/).
+
+  1. Add the **IPA path** in the respective field.
+  2. You can optionally add the **DSYM path** (debug symbols file) too.
+  3. The **BITRISE's App-Slug variable** and the **BITRISE's Build-Slug variable** are passed automatically on Bitrise.
+  5. Add the **Amazon AWS Access Key** and the **Amazon AWS Secret Access Key**. These were created [when you signed up for an AWS account](https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html). If you don't have these keys, you can create them through the [IAM console](https://signin.aws.amazon.com/signin?redirect_uri=https%3A%2F%2Fconsole.aws.amazon.com%2Fiam%2F%3Fstate%3DhashArgs%2523%26isauthcode%3Dtrue&client_id=arn%3Aaws%3Aiam%3A%3A015428540659%3Auser%2Fiam&forceMobileApp=0&code_challenge=Dm2ZFAI7S6azuYUUgSfUmQygOH0QNANyPFzDZ6FHeSc&code_challenge_method=SHA-256).
+  6. Add the **Amazon S3 Bucket Name**.
+  7. Add the **Amazon S3 Bucket Region** which you [specified when creating a bucket in AWS](https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingBucket.html). If you use the default s3 region (us-east-1), you can leave this field empty.
+  8. Add the **Amazon S3 File Path in Bucket** which is the URL of the bucket.
+  9. Select the **Amazon S3 file access level** which can be `public_read` or `private`.
+
+  ### Useful links
+  - [Deploying an iOS app](https://devcenter.bitrise.io/deploy/ios-deploy/ios-deploy-index/)
+  - [Code signing an iOS app](https://devcenter.bitrise.io/code-signing/ios-code-signing/code-signing-index/)
+
+  ### Related Steps
+  - [iOS Auto Provision with App Store Connect API](https://www.bitrise.io/integrations/steps/ios-auto-provision-appstoreconnect)
+  - [Amazon S3 Bucket Sync](https://www.bitrise.io/integrations/steps/amazon-s3-upload)
 website: https://github.com/bitrise-io/steps-amazon-s3-deploy
 source_code_url: https://github.com/bitrise-io/steps-amazon-s3-deploy
 support_url: https://github.com/bitrise-io/steps-amazon-s3-deploy/issues
